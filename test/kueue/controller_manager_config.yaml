@@ -1,0 +1,41 @@
+apiVersion: config.kueue.x-k8s.io/v1beta2
+kind: Configuration
+health:
+  healthProbeBindAddress: :8081
+metrics:
+  bindAddress: :8443
+webhook:
+  port: 9443
+leaderElection:
+  leaderElect: true
+  resourceName: c1f6bfd2.kueue.x-k8s.io
+controller:
+  groupKindConcurrency:
+    Job.batch: 10
+    Pod: 20
+    Workload.kueue.x-k8s.io: 10
+    LocalQueue.kueue.x-k8s.io: 2
+    Cohort.kueue.x-k8s.io: 2
+    ClusterQueue.kueue.x-k8s.io: 2
+    ResourceFlavor.kueue.x-k8s.io: 2
+clientConnection:
+  qps: 50
+  burst: 100
+managedJobsNamespaceSelector:
+  matchLabels:
+    kueue-managed: "true"
+integrations:
+  frameworks:
+  - "batch/job"
+  - "pod"
+featureGates:
+  ElasticJobsViaWorkloadSlices: true
+waitForPodsReady:
+  timeout: 5m
+  recoveryTimeout: 2m
+  blockAdmission: false
+  requeuingStrategy:
+    timestamp: Creation
+    backoffLimitCount: 2
+    backoffBaseSeconds: 5
+    backoffMaxSeconds: 30
