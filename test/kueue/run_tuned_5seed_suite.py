@@ -18,10 +18,12 @@ from test.kueue.run_live_kueue_matrix import (
     _build_arm_comparison,
     ensure_model_server,
 )
+from model_server.admirl_server.kueue_runtime import load_runtime_policy
 
 
 DEFAULT_LOCAL_KUEUE_DIR = Path.home() / "Desktop" / "kueue"
-UPSTREAM_LOCAL_DIR = Path("/tmp/kueue-upstream-v015")
+DEFAULT_UPSTREAM_KUEUE_URL = "https://github.com/kubernetes-sigs/kueue.git"
+DEFAULT_UPSTREAM_KUEUE_REF = "v0.15.0"
 SEED_SET = [7, 11, 13, 17, 23]
 
 
@@ -31,9 +33,70 @@ class ArmSpec:
     label: str
     workload_preset: str
     arm: str
-    source_dir: str
+    source_mode: str
+    source_dir: str | None = None
+    git_url: str | None = None
+    git_ref: str | None = None
     checkpoint_path: str | None = None
     runtime_policy: str | None = None
+
+
+def _requires_checkpoint(spec: ArmSpec) -> bool:
+    return spec.arm.startswith("learned")
+
+
+def _validate_checkpoint_for_spec(spec: ArmSpec) -> None:
+    if not _requires_checkpoint(spec):
+        return
+    checkpoint_path = str(spec.checkpoint_path or "").strip()
+    if not checkpoint_path:
+        raise SystemExit(
+            f"missing checkpoint for {spec.label}; expected a learned checkpoint for preset {spec.workload_preset!r}"
+        )
+    if checkpoint_path.startswith("/absolute/path/to/"):
+        raise SystemExit(
+            f"checkpoint for {spec.label} is still the literal placeholder path {checkpoint_path!r}; "
+            "replace it with a real checkpoint path on disk"
+        )
+    path = Path(checkpoint_path).expanduser().resolve()
+    if not path.exists():
+        raise SystemExit(
+            f"checkpoint for {spec.label} does not exist: {path}"
+        )
+    try:
+        loaded = load_runtime_policy(str(path))
+    except Exception as exc:
+        raise SystemExit(
+            f"checkpoint for {spec.label} could not be loaded: {exc}"
+        ) from exc
+    if loaded.workload_preset != spec.workload_preset:
+        raise SystemExit(
+            f"checkpoint for {spec.label} is for preset {loaded.workload_preset!r}, "
+            f"but this arm expects {spec.workload_preset!r}: {path}"
+        )
+
+
+def _default_checkpoint_for_preset(repo_root: Path, workload_preset: str) -> str | None:
+    preset = str(workload_preset or "").strip().lower()
+    candidates: list[Path] = []
+    if "elastic" in preset:
+        candidates.extend(
+            [
+                repo_root / "test" / "results" / "checkpoints" / "admirl-elastic.pt",
+                repo_root / "test" / "results" / "kueue-checkpoints-sweep" / "eet-tuned-seed7.pt",
+            ]
+        )
+    if "starvation" in preset or "cohort" in preset:
+        candidates.extend(
+            [
+                repo_root / "test" / "results" / "checkpoints" / "admirl-cohort.pt",
+                repo_root / "test" / "results" / "kueue-checkpoints-sweep" / "cohort-tuned-seed7.pt",
+            ]
+        )
+    for path in candidates:
+        if path.exists():
+            return str(path.resolve())
+    return None
 
 
 def _arm_specs(repo_root: Path) -> list[ArmSpec]:
@@ -43,52 +106,92 @@ def _arm_specs(repo_root: Path) -> list[ArmSpec]:
             label="cohort + BestEffortFIFO",
             workload_preset="kueue-lingjun-gang-starvation-cohort",
             arm="stock-best-effort-default",
-            source_dir=str(UPSTREAM_LOCAL_DIR),
+            source_mode="git",
+            git_url=DEFAULT_UPSTREAM_KUEUE_URL,
+            git_ref=DEFAULT_UPSTREAM_KUEUE_REF,
         ),
         ArmSpec(
             name="cohort-strict",
             label="cohort + StrictFIFO",
             workload_preset="kueue-lingjun-gang-starvation-cohort",
             arm="strict-default-sensitivity",
-            source_dir=str(UPSTREAM_LOCAL_DIR),
+            source_mode="git",
+            git_url=DEFAULT_UPSTREAM_KUEUE_URL,
+            git_ref=DEFAULT_UPSTREAM_KUEUE_REF,
         ),
         ArmSpec(
             name="cohort-learned",
             label="cohort + learned",
             workload_preset="kueue-lingjun-gang-starvation-cohort",
             arm="learned-best-effort-default",
+            source_mode="local",
             source_dir=str(DEFAULT_LOCAL_KUEUE_DIR),
-            checkpoint_path=str(repo_root / "test" / "results" / "kueue-checkpoints-sweep" / "cohort-tuned-seed7.pt"),
+            checkpoint_path=_default_checkpoint_for_preset(repo_root, "kueue-lingjun-gang-starvation-cohort"),
         ),
         ArmSpec(
             name="elastic-best-effort",
             label="elastic + BestEffortFIFO",
             workload_preset="kueue-lingjun-gang-elastic-topology",
             arm="stock-best-effort-default",
-            source_dir=str(UPSTREAM_LOCAL_DIR),
+            source_mode="git",
+            git_url=DEFAULT_UPSTREAM_KUEUE_URL,
+            git_ref=DEFAULT_UPSTREAM_KUEUE_REF,
         ),
         ArmSpec(
             name="elastic-strict",
             label="elastic + StrictFIFO",
             workload_preset="kueue-lingjun-gang-elastic-topology",
             arm="strict-default-sensitivity",
-            source_dir=str(UPSTREAM_LOCAL_DIR),
+            source_mode="git",
+            git_url=DEFAULT_UPSTREAM_KUEUE_URL,
+            git_ref=DEFAULT_UPSTREAM_KUEUE_REF,
         ),
         ArmSpec(
             name="elastic-learned",
             label="elastic + learned",
             workload_preset="kueue-lingjun-gang-elastic-topology",
             arm="learned-elastic-default",
+            source_mode="local",
             source_dir=str(DEFAULT_LOCAL_KUEUE_DIR),
-            checkpoint_path=str(repo_root / "test" / "results" / "kueue-checkpoints-sweep" / "eet-tuned-seed7.pt"),
+            checkpoint_path=_default_checkpoint_for_preset(repo_root, "kueue-lingjun-gang-elastic-topology"),
         ),
     ]
 
 
-def _profile_env(source_dir: str) -> dict[str, str]:
+def _apply_checkpoint_overrides(specs: dict[str, ArmSpec], *, cohort_checkpoint: str, elastic_checkpoint: str) -> dict[str, ArmSpec]:
+    updated = dict(specs)
+    if cohort_checkpoint:
+        updated["cohort-learned"] = ArmSpec(
+            **{
+                **updated["cohort-learned"].__dict__,
+                "checkpoint_path": str(Path(cohort_checkpoint).expanduser().resolve()),
+            }
+        )
+    if elastic_checkpoint:
+        updated["elastic-learned"] = ArmSpec(
+            **{
+                **updated["elastic-learned"].__dict__,
+                "checkpoint_path": str(Path(elastic_checkpoint).expanduser().resolve()),
+            }
+        )
+    return updated
+
+
+def _profile_env(spec: ArmSpec) -> dict[str, str]:
     env = dict(os.environ)
-    env["ADMIRL_KUEUE_SOURCE_MODE"] = "local"
-    env["ADMIRL_KUEUE_SOURCE_DIR"] = source_dir
+    env["ADMIRL_KUEUE_SOURCE_MODE"] = spec.source_mode
+    if spec.source_dir:
+        env["ADMIRL_KUEUE_SOURCE_DIR"] = spec.source_dir
+    else:
+        env.pop("ADMIRL_KUEUE_SOURCE_DIR", None)
+    if spec.git_url:
+        env["ADMIRL_KUEUE_GIT_URL"] = spec.git_url
+    else:
+        env.pop("ADMIRL_KUEUE_GIT_URL", None)
+    if spec.git_ref:
+        env["ADMIRL_KUEUE_GIT_REF"] = spec.git_ref
+    else:
+        env.pop("ADMIRL_KUEUE_GIT_REF", None)
     return env
 
 
@@ -168,7 +271,7 @@ def _run_arm_seed(
         subprocess.run(
             cmd,
             cwd=str(REPO_ROOT),
-            env=_profile_env(spec.source_dir),
+            env=_profile_env(spec),
             check=True,
             timeout=timeout_seconds,
         )
@@ -202,7 +305,10 @@ def _aggregate_arm_runs(spec: ArmSpec, runs: list[dict]) -> dict:
         "label": spec.label,
         "arm": spec.arm,
         "preset": spec.workload_preset,
+        "source_mode": spec.source_mode,
         "source_dir": spec.source_dir,
+        "git_url": spec.git_url,
+        "git_ref": spec.git_ref,
         "checkpoint_path": spec.checkpoint_path,
         "runtime_policy": spec.runtime_policy,
         "metrics": metric_summary,
@@ -318,12 +424,39 @@ def main() -> None:
     parser.add_argument("--runtime-scale", type=float, default=120.0)
     parser.add_argument("--time-scale", type=float, default=10.0)
     parser.add_argument("--arm-timeout-seconds", type=float, default=1200.0)
+    parser.add_argument("--cohort-checkpoint", default="", help="Optional explicit checkpoint for cohort learned runs")
+    parser.add_argument("--elastic-checkpoint", default="", help="Optional explicit checkpoint for elastic learned runs")
     args = parser.parse_args()
+
+    specs = {spec.name: spec for spec in _arm_specs(REPO_ROOT)}
+    specs = _apply_checkpoint_overrides(
+        specs,
+        cohort_checkpoint=args.cohort_checkpoint,
+        elastic_checkpoint=args.elastic_checkpoint,
+    )
+    missing = [
+        spec
+        for spec in specs.values()
+        if _requires_checkpoint(spec) and not spec.checkpoint_path
+    ]
+    if missing:
+        details = "\n".join(
+            f"- {spec.label}: expected a local checkpoint for preset {spec.workload_preset!r}"
+            for spec in missing
+        )
+        raise SystemExit(
+            "missing learned checkpoints for the tuned suite:\n"
+            f"{details}\n"
+            "Train and save the missing checkpoints first, for example under "
+            "`test/results/checkpoints/admirl-cohort.pt` and "
+            "`test/results/checkpoints/admirl-elastic.pt`."
+        )
+    for spec in specs.values():
+        _validate_checkpoint_for_spec(spec)
 
     ensure_model_server()
     args.output_root.mkdir(parents=True, exist_ok=True)
     seeds = [int(item.strip()) for item in args.seeds.split(",") if item.strip()]
-    specs = {spec.name: spec for spec in _arm_specs(REPO_ROOT)}
     runs: dict[str, list[dict]] = {name: [] for name in specs}
 
     for seed in seeds:

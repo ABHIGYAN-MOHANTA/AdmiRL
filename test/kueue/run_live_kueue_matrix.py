@@ -728,6 +728,13 @@ def _augment_arm_metrics(metrics: dict) -> dict:
 
     jobs_total = int(enriched.get("jobs_total", len(all_rows)) or 0)
     jobs_completed = int(enriched.get("jobs_completed", sum(1 for row in all_rows if row.get("completed"))) or 0)
+    jobs_running = sum(
+        1
+        for row in all_rows
+        if not row.get("completed")
+        and any(row.get(key) is not None for key in ("admitted_at", "scheduled_at", "started_at"))
+    )
+    jobs_pending = max(0, jobs_total - jobs_completed - jobs_running)
     gang_completed = sum(1 for row in gang_rows if row.get("completed"))
     small_completed = sum(1 for row in small_rows if row.get("completed"))
     topology_completed = sum(1 for row in topology_rows if row.get("completed"))
@@ -735,6 +742,9 @@ def _augment_arm_metrics(metrics: dict) -> dict:
     elastic_completed = sum(1 for row in elastic_rows if row.get("completed"))
     provisioned_completed = sum(1 for row in provisioned_rows if row.get("completed"))
     enriched["job_completion_ratio"] = (jobs_completed / jobs_total) if jobs_total else 0.0
+    enriched["progress_ratio"] = enriched["job_completion_ratio"]
+    enriched["jobs_running"] = jobs_running
+    enriched["jobs_pending"] = jobs_pending
     enriched["gang_jobs_total"] = len(gang_rows)
     enriched["gang_jobs_completed"] = gang_completed
     enriched["small_jobs_total"] = len(small_rows)
@@ -1163,11 +1173,72 @@ def reset_model_server_runtime_metrics() -> None:
             raise
 
 
-def model_server_runtime_status() -> dict:
+def model_server_status() -> dict:
     try:
-        return _http_json(f"{MODEL_SERVER_URL}/api/runtime-status")
+        return _http_json(f"{MODEL_SERVER_URL}/api/policy/status")
     except (urllib_error.HTTPError, urllib_error.URLError, TimeoutError, json.JSONDecodeError):
         return {}
+
+
+def publish_model_server_benchmark_snapshot(payload: dict) -> None:
+    try:
+        _http_json(
+            f"{MODEL_SERVER_URL}/api/benchmark/progress",
+            method="POST",
+            payload=payload,
+            timeout=5.0,
+        )
+    except (urllib_error.HTTPError, urllib_error.URLError, TimeoutError, json.JSONDecodeError):
+        return
+
+
+def _build_benchmark_progress_payload(
+    metrics: dict,
+    *,
+    workload_preset: str,
+    arm_name: str,
+    seed: int,
+    namespace: str,
+    phase: str,
+    elapsed_seconds: float,
+    timeout_seconds: float,
+    active: bool,
+) -> dict:
+    return {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "preset": canonical_kueue_preset(workload_preset),
+        "arm": arm_name,
+        "seed": int(seed),
+        "namespace": namespace,
+        "phase": phase,
+        "active": bool(active),
+        "elapsed_seconds": float(max(0.0, elapsed_seconds)),
+        "timeout_seconds": float(max(0.0, timeout_seconds)),
+        "progress_ratio": float(metrics.get("job_completion_ratio", 0.0) or 0.0),
+        "jobs_total": int(metrics.get("jobs_total", 0) or 0),
+        "jobs_completed": int(metrics.get("jobs_completed", 0) or 0),
+        "jobs_running": int(metrics.get("jobs_running", 0) or 0),
+        "jobs_pending": int(metrics.get("jobs_pending", 0) or 0),
+        "avg_gang_wait_seconds": float(metrics.get("avg_gang_wait_seconds", 0.0) or 0.0),
+        "avg_small_wait_seconds": float(metrics.get("avg_small_wait_seconds", 0.0) or 0.0),
+        "avg_elastic_wait_seconds": float(metrics.get("avg_elastic_wait_seconds", 0.0) or 0.0),
+        "head_gang_blocked_seconds": float(metrics.get("head_gang_blocked_seconds", 0.0) or 0.0),
+        "head_gang_current_blocked_seconds": float(
+            metrics.get(
+                "head_gang_current_blocked_seconds",
+                metrics.get("head_gang_blocked_seconds", 0.0),
+            )
+            or 0.0
+        ),
+        "throughput_jobs_per_minute": float(metrics.get("throughput_jobs_per_minute", 0.0) or 0.0),
+        "throughput_gpu_per_minute": float(metrics.get("throughput_gpu_per_minute", 0.0) or 0.0),
+        "job_completion_ratio": float(metrics.get("job_completion_ratio", 0.0) or 0.0),
+        "gang_completion_ratio": float(metrics.get("gang_completion_ratio", 0.0) or 0.0),
+        "elastic_completion_ratio": float(metrics.get("elastic_completion_ratio", 0.0) or 0.0),
+        "topology_hit_rate": float(metrics.get("topology_hit_rate", 0.0) or 0.0),
+        "small_job_bypass_count": float(metrics.get("small_job_bypass_count_while_gang_pending", 0.0) or 0.0),
+        "head_gang_workload": str(metrics.get("head_gang_workload", "") or ""),
+    }
 
 
 def start_provisioners(
@@ -1528,7 +1599,14 @@ def wait_for_arm_completion(
     expected_pods: int,
     timeout_seconds: float,
     finalized_pods: dict[str, dict],
+    *,
+    meta: dict,
+    time_scale: float,
+    workload_preset: str,
+    arm_name: str,
+    seed: int,
 ) -> None:
+    run_started_at = time.time()
     deadline = time.time() + timeout_seconds
     while time.time() < deadline:
         pods = _kubectl_json(["get", "pods", "-n", namespace]).get("items", [])
@@ -1545,9 +1623,36 @@ def wait_for_arm_completion(
             synthetic_finished_at = _synthetic_finish_time(item)
             if phase in {"Succeeded", "Failed"} or (synthetic_finished_at is not None and synthetic_finished_at <= now):
                 completed_keys.add(key)
+        live_metrics = collect_arm_metrics(namespace, meta, finalized_pods=finalized_pods, time_scale=time_scale)
+        publish_model_server_benchmark_snapshot(
+            _build_benchmark_progress_payload(
+                live_metrics,
+                workload_preset=workload_preset,
+                arm_name=arm_name,
+                seed=seed,
+                namespace=namespace,
+                phase="running",
+                elapsed_seconds=now - run_started_at,
+                timeout_seconds=timeout_seconds,
+                active=True,
+            )
+        )
         if len(completed_keys) >= expected_pods:
             return
         time.sleep(3)
+    publish_model_server_benchmark_snapshot(
+        _build_benchmark_progress_payload(
+            collect_arm_metrics(namespace, meta, finalized_pods=finalized_pods, time_scale=time_scale),
+            workload_preset=workload_preset,
+            arm_name=arm_name,
+            seed=seed,
+            namespace=namespace,
+            phase="timed_out",
+            elapsed_seconds=max(0.0, timeout_seconds),
+            timeout_seconds=timeout_seconds,
+            active=False,
+        )
+    )
     raise TimeoutError(f"timed out waiting for namespace {namespace} to finish")
 
 
@@ -1678,6 +1783,7 @@ def collect_arm_metrics(
     group_rows = []
     head_gang_arrival = None
     head_gang_wait = None
+    head_gang_current_blocked = None
     head_gang_workload = ""
     head_gang_admit = None
     head_gang_candidate_flavors: list[str] = []
@@ -1795,6 +1901,11 @@ def collect_arm_metrics(
             if head_gang_arrival is None or float(scaled_arrival_time) < float(head_gang_arrival):
                 head_gang_arrival = float(scaled_arrival_time)
                 head_gang_wait = wait_seconds
+                head_gang_current_blocked = (
+                    float(wait_seconds)
+                    if wait_seconds is not None
+                    else (max(0.0, now - created_at) if created_at is not None else None)
+                )
                 head_gang_workload = workload_name
                 head_gang_candidate_flavors = list(meta_row.get("candidate_flavors", []) or [])
                 head_gang_admit = (
@@ -1817,6 +1928,10 @@ def collect_arm_metrics(
                 "candidate_flavors": list(meta_row.get("candidate_flavors", []) or []),
                 "admitted_flavors": admitted_flavors,
                 "used_spare_capacity": used_spare_capacity,
+                "created_at": created_at,
+                "admitted_at": admitted_at,
+                "scheduled_at": scheduled_at,
+                "started_at": started_at,
                 "wait_seconds": wait_seconds,
                 "completion_seconds": completion_seconds,
                 "completed": complete,
@@ -1863,6 +1978,7 @@ def collect_arm_metrics(
         "p99_gang_completion_seconds": _percentile(gang_completion_values, 99),
         "gang_admission_ratio": (gang_completed / gang_total) if gang_total else 0.0,
         "head_gang_blocked_seconds": float(head_gang_wait or 0.0),
+        "head_gang_current_blocked_seconds": float(head_gang_current_blocked or 0.0),
         "head_gang_workload": head_gang_workload,
         "small_job_bypass_count_while_gang_pending": small_job_bypass_while_gang_pending,
         "small_job_head_flavor_admissions_while_gang_pending": small_job_head_flavor_admissions,
@@ -1976,6 +2092,11 @@ def run_arm(
             expected_pods=expected_pods,
             timeout_seconds=timeout_seconds,
             finalized_pods=finalized_pods,
+            meta=meta,
+            time_scale=time_scale,
+            workload_preset=workload_preset,
+            arm_name=arm.name,
+            seed=seed,
         )
         metrics = collect_arm_metrics(namespace, meta, finalized_pods=finalized_pods, time_scale=time_scale)
         metrics["arm"] = arm.name
@@ -1984,7 +2105,20 @@ def run_arm(
         metrics["runtime_policy"] = runtime_policy
         metrics["elastic_policy"] = elastic_policy_mode
         metrics["timeout_seconds"] = timeout_seconds
-        metrics["model_server_status"] = model_server_runtime_status()
+        metrics["model_server_status"] = model_server_status()
+        publish_model_server_benchmark_snapshot(
+            _build_benchmark_progress_payload(
+                metrics,
+                workload_preset=workload_preset,
+                arm_name=arm.name,
+                seed=seed,
+                namespace=namespace,
+                phase="completed",
+                elapsed_seconds=float(metrics.get("makespan_seconds", 0.0) or 0.0),
+                timeout_seconds=timeout_seconds,
+                active=False,
+            )
+        )
         return metrics
     finally:
         for proc, log_file in provisioner_procs:

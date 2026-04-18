@@ -4,6 +4,8 @@ import unittest
 
 from test.kueue.run_live_kueue_source_compare import (
     SourceProfile,
+    _default_candidate_arm_for_preset,
+    _requires_checkpoint,
     _matrix_command,
     _profile_env,
     aggregate_comparison_runs,
@@ -55,6 +57,22 @@ class RunLiveKueueSourceCompareTests(unittest.TestCase):
         self.assertIn("--runtime-policy-override", cmd)
         self.assertIn("blocked_guard", cmd)
         self.assertIn("test/kueue/run_live_kueue_matrix.py", cmd)
+
+    def test_default_candidate_arm_prefers_elastic_arm_for_elastic_presets(self) -> None:
+        self.assertEqual(
+            _default_candidate_arm_for_preset("kueue-lingjun-gang-elastic-topology"),
+            "learned-elastic-default",
+        )
+        self.assertEqual(
+            _default_candidate_arm_for_preset("kueue-lingjun-gang-starvation-cohort"),
+            "learned-best-effort-default",
+        )
+
+    def test_requires_checkpoint_for_learned_arms(self) -> None:
+        self.assertTrue(_requires_checkpoint("learned-elastic-default"))
+        self.assertTrue(_requires_checkpoint("learned-best-effort-default"))
+        self.assertFalse(_requires_checkpoint("stock-best-effort-default"))
+        self.assertFalse(_requires_checkpoint("heuristic-elastic-default"))
 
     def test_aggregate_comparison_runs_tracks_mean_and_wins(self) -> None:
         aggregate = aggregate_comparison_runs(

@@ -4,28 +4,32 @@ from .kueue_runtime import load_runtime_policy
 from .state import VALID_RUNTIME_POLICIES, effective_runtime_policy_name, runtime_policy_uses_checkpoint, state
 
 
+def _status_payload_locked() -> dict:
+    last_response = state.last_decision.get("response") or {}
+    last_source = (
+        last_response.get("advisor_source")
+        or last_response.get("source")
+        or ""
+    )
+    effective_policy = effective_runtime_policy_name(
+        state.runtime_policy,
+        state.learned_checkpoint is not None,
+    )
+    return {
+        "runtime_policy": state.runtime_policy,
+        "effective_policy": effective_policy,
+        "learned_checkpoint_path": state.learned_checkpoint_path,
+        "last_decision_timestamp": state.last_decision.get("timestamp"),
+        "last_decision_source": last_source,
+        "runtime_metrics": state.runtime_metrics_snapshot_locked(),
+    }
+
+
 def register_policy_routes(app):
     @app.route("/api/policy/status", methods=["GET"])
     def policy_status():
         with state.lock:
-            last_response = state.last_decision.get("response") or {}
-            last_source = (
-                last_response.get("advisor_source")
-                or last_response.get("source")
-                or ""
-            )
-            effective_policy = effective_runtime_policy_name(
-                state.runtime_policy,
-                state.learned_checkpoint is not None,
-            )
-            return jsonify({
-                "runtime_policy": state.runtime_policy,
-                "effective_policy": effective_policy,
-                "learned_checkpoint_path": state.learned_checkpoint_path,
-                "last_decision_timestamp": state.last_decision.get("timestamp"),
-                "last_decision_source": last_source,
-                "runtime_metrics": state.runtime_metrics_snapshot_locked(),
-            })
+            return jsonify(_status_payload_locked())
 
     @app.route("/api/policy/runtime-policy", methods=["GET", "POST"])
     def runtime_policy():
@@ -106,21 +110,6 @@ def register_policy_routes(app):
     @app.route("/health")
     def health():
         with state.lock:
-            last_response = state.last_decision.get("response") or {}
-            last_source = (
-                last_response.get("advisor_source")
-                or last_response.get("source")
-                or ""
-            )
-            effective_policy = effective_runtime_policy_name(
-                state.runtime_policy,
-                state.learned_checkpoint is not None,
-            )
-            return jsonify({
-                "status": "ok",
-                "runtime_policy": state.runtime_policy,
-                "effective_policy": effective_policy,
-                "learned_checkpoint_path": state.learned_checkpoint_path,
-                "last_decision_source": last_source,
-                "runtime_metrics": state.runtime_metrics_snapshot_locked(),
-            })
+            payload = _status_payload_locked()
+        payload["status"] = "ok"
+        return jsonify(payload)

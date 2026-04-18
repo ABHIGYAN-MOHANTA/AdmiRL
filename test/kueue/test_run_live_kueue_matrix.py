@@ -12,6 +12,7 @@ from test.kueue import run_live_kueue_matrix as live_matrix
 from test.kueue.run_live_kueue_matrix import (
     _augment_arm_metrics,
     _augment_result_pack,
+    _build_benchmark_progress_payload,
     _count_small_job_bypass_while_gang_pending,
     _format_build_date,
     _kueue_image_name,
@@ -223,6 +224,42 @@ class RunLiveKueueMatrixTests(unittest.TestCase):
         )
 
         self.assertEqual(bypass_count, 1)
+
+    def test_build_benchmark_progress_payload_extracts_live_story_metrics(self) -> None:
+        payload = _build_benchmark_progress_payload(
+            {
+                "job_completion_ratio": 0.5,
+                "jobs_total": 8,
+                "jobs_completed": 4,
+                "jobs_running": 3,
+                "jobs_pending": 1,
+                "avg_gang_wait_seconds": 42.0,
+                "avg_small_wait_seconds": 9.0,
+                "avg_elastic_wait_seconds": 18.0,
+                "head_gang_blocked_seconds": 55.0,
+                "head_gang_current_blocked_seconds": 61.0,
+                "throughput_jobs_per_minute": 7.5,
+                "gang_completion_ratio": 0.5,
+                "elastic_completion_ratio": 0.75,
+                "topology_hit_rate": 1.0,
+                "small_job_bypass_count_while_gang_pending": 2,
+                "head_gang_workload": "gang-a",
+            },
+            workload_preset="kueue-lingjun-gang-starvation-cohort",
+            arm_name="cohort-learned",
+            seed=7,
+            namespace="demo-ns",
+            phase="running",
+            elapsed_seconds=30.0,
+            timeout_seconds=300.0,
+            active=True,
+        )
+
+        self.assertEqual(payload["preset"], "kueue-lingjun-gang-starvation-cohort")
+        self.assertEqual(payload["arm"], "cohort-learned")
+        self.assertEqual(payload["jobs_running"], 3)
+        self.assertEqual(payload["head_gang_current_blocked_seconds"], 61.0)
+        self.assertEqual(payload["small_job_bypass_count"], 2.0)
 
     def test_bypass_counter_ignores_disjoint_flavor_noise(self) -> None:
         group_rows = [

@@ -28,6 +28,40 @@ DEFAULT_UPSTREAM_KUEUE_REF = "v0.15.0"
 DEFAULT_LOCAL_KUEUE_DIR = Path.home() / "Desktop" / "kueue"
 
 
+def _default_candidate_arm_for_preset(workload_preset: str) -> str:
+    preset = str(workload_preset or "").strip().lower()
+    if "elastic" in preset:
+        return "learned-elastic-default"
+    return "learned-best-effort-default"
+
+
+def _default_checkpoint_for_preset(workload_preset: str) -> str | None:
+    preset = str(workload_preset or "").strip().lower()
+    candidates: list[Path] = []
+    if "elastic" in preset:
+        candidates.extend(
+            [
+                REPO_ROOT / "test" / "results" / "checkpoints" / "admirl-elastic.pt",
+                REPO_ROOT / "test" / "results" / "kueue-checkpoints-sweep" / "eet-tuned-seed7.pt",
+                REPO_ROOT / "test" / "results" / "kueue-checkpoints-postcleanup" / "kueue-lingjun-gang-elastic-topology-postcleanup.pt",
+            ]
+        )
+    else:
+        candidates.extend(
+            [
+                REPO_ROOT / "test" / "results" / "kueue-checkpoints-sweep" / "cohort-tuned-seed7.pt",
+            ]
+        )
+    for path in candidates:
+        if path.exists():
+            return str(path.resolve())
+    return None
+
+
+def _requires_checkpoint(arm_name: str) -> bool:
+    return str(arm_name or "").strip().lower().startswith("learned")
+
+
 def _maybe_start_model_server() -> tuple[subprocess.Popen[str] | None, object | None]:
     try:
         ensure_model_server()
@@ -303,7 +337,7 @@ def main() -> None:
     parser.add_argument("--baseline-runtime-policy", default="")
 
     parser.add_argument("--candidate-label", default="ours-admission-rl")
-    parser.add_argument("--candidate-arm", default="learned-best-effort-default")
+    parser.add_argument("--candidate-arm", default="")
     parser.add_argument("--candidate-source-mode", default="local")
     parser.add_argument("--candidate-source-dir", default=str(DEFAULT_LOCAL_KUEUE_DIR))
     parser.add_argument("--candidate-git-url", default="")
@@ -312,6 +346,25 @@ def main() -> None:
     parser.add_argument("--candidate-runtime-policy", default="")
     args = parser.parse_args()
 
+    candidate_arm = args.candidate_arm or _default_candidate_arm_for_preset(args.workload_preset)
+    baseline_checkpoint = args.baseline_checkpoint or None
+    candidate_checkpoint = args.candidate_checkpoint or None
+    if _requires_checkpoint(args.baseline_arm) and baseline_checkpoint is None:
+        baseline_checkpoint = _default_checkpoint_for_preset(args.workload_preset)
+    if _requires_checkpoint(candidate_arm) and candidate_checkpoint is None:
+        candidate_checkpoint = _default_checkpoint_for_preset(args.workload_preset)
+
+    if _requires_checkpoint(args.baseline_arm) and baseline_checkpoint is None:
+        raise SystemExit(
+            f"baseline arm {args.baseline_arm!r} requires --baseline-checkpoint; "
+            f"no default checkpoint was found for preset {args.workload_preset!r}"
+        )
+    if _requires_checkpoint(candidate_arm) and candidate_checkpoint is None:
+        raise SystemExit(
+            f"candidate arm {candidate_arm!r} requires --candidate-checkpoint; "
+            f"no default checkpoint was found for preset {args.workload_preset!r}"
+        )
+
     baseline_profile = SourceProfile(
         label=args.baseline_label,
         arm=args.baseline_arm,
@@ -319,17 +372,17 @@ def main() -> None:
         source_dir=args.baseline_source_dir or None,
         git_url=args.baseline_git_url or None,
         git_ref=args.baseline_git_ref or None,
-        checkpoint_path=args.baseline_checkpoint or None,
+        checkpoint_path=baseline_checkpoint,
         runtime_policy=args.baseline_runtime_policy or None,
     )
     candidate_profile = SourceProfile(
         label=args.candidate_label,
-        arm=args.candidate_arm,
+        arm=candidate_arm,
         source_mode=args.candidate_source_mode,
         source_dir=args.candidate_source_dir or None,
         git_url=args.candidate_git_url or None,
         git_ref=args.candidate_git_ref or None,
-        checkpoint_path=args.candidate_checkpoint or None,
+        checkpoint_path=candidate_checkpoint,
         runtime_policy=args.candidate_runtime_policy or None,
     )
 
