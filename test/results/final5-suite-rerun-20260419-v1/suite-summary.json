@@ -1,0 +1,3432 @@
+{
+  "config": {
+    "seeds": [
+      7,
+      11,
+      13,
+      17,
+      23
+    ],
+    "num_jobs_cohort": 8,
+    "num_jobs_elastic": 8,
+    "arrival_span_cohort": 120.0,
+    "arrival_span_elastic": 120.0,
+    "trace_split": "test",
+    "trace_train_fraction": 0.75,
+    "runtime_scale": 120.0,
+    "time_scale": 10.0,
+    "arm_timeout_seconds": 1200.0
+  },
+  "arms": {
+    "cohort-best-effort": {
+      "label": "cohort + BestEffortFIFO",
+      "arm": "stock-best-effort-default",
+      "preset": "kueue-lingjun-gang-starvation-cohort",
+      "source_mode": "git",
+      "source_dir": null,
+      "git_url": "https://github.com/kubernetes-sigs/kueue.git",
+      "git_ref": "v0.15.0",
+      "checkpoint_path": null,
+      "runtime_policy": null,
+      "metrics": {
+        "head_gang_blocked_seconds": {
+          "mean": 52.4,
+          "min": 50.0,
+          "max": 54.0,
+          "runs": 5,
+          "values": [
+            50.0,
+            54.0,
+            53.0,
+            54.0,
+            51.0
+          ]
+        },
+        "head_gang_wait_to_runtime_ratio": {
+          "mean": 0.05458333333333333,
+          "min": 0.052083333333333336,
+          "max": 0.05625,
+          "runs": 5,
+          "values": [
+            0.052083333333333336,
+            0.05625,
+            0.05520833333333333,
+            0.05625,
+            0.053125
+          ]
+        },
+        "avg_gang_wait_seconds": {
+          "mean": 52.4,
+          "min": 50.0,
+          "max": 54.0,
+          "runs": 5,
+          "values": [
+            50.0,
+            54.0,
+            53.0,
+            54.0,
+            51.0
+          ]
+        },
+        "p95_gang_wait_seconds": {
+          "mean": 52.4,
+          "min": 50.0,
+          "max": 54.0,
+          "runs": 5,
+          "values": [
+            50.0,
+            54.0,
+            53.0,
+            54.0,
+            51.0
+          ]
+        },
+        "p99_gang_wait_seconds": {
+          "mean": 52.4,
+          "min": 50.0,
+          "max": 54.0,
+          "runs": 5,
+          "values": [
+            50.0,
+            54.0,
+            53.0,
+            54.0,
+            51.0
+          ]
+        },
+        "avg_gang_completion_seconds": {
+          "mean": 60.4,
+          "min": 58.0,
+          "max": 62.0,
+          "runs": 5,
+          "values": [
+            58.0,
+            62.0,
+            61.0,
+            62.0,
+            59.0
+          ]
+        },
+        "avg_topology_aware_wait_seconds": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "avg_topology_aware_completion_seconds": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "avg_critical_wait_seconds": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "avg_critical_completion_seconds": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "avg_elastic_wait_seconds": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "avg_elastic_completion_seconds": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "elastic_completion_ratio": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "critical_completion_ratio": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_bypass_count_while_gang_pending": {
+          "mean": 6.0,
+          "min": 6.0,
+          "max": 6.0,
+          "runs": 5,
+          "values": [
+            6.0,
+            6.0,
+            6.0,
+            6.0,
+            6.0
+          ]
+        },
+        "small_job_bypass_fraction_while_gang_pending": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0,
+          "runs": 5,
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "small_job_bypass_gpu_while_gang_pending": {
+          "mean": 24.0,
+          "min": 24.0,
+          "max": 24.0,
+          "runs": 5,
+          "values": [
+            24.0,
+            24.0,
+            24.0,
+            24.0,
+            24.0
+          ]
+        },
+        "small_job_head_flavor_admissions_while_gang_pending": {
+          "mean": 6.0,
+          "min": 6.0,
+          "max": 6.0,
+          "runs": 5,
+          "values": [
+            6.0,
+            6.0,
+            6.0,
+            6.0,
+            6.0
+          ]
+        },
+        "small_job_head_flavor_gpu_while_gang_pending": {
+          "mean": 24.0,
+          "min": 24.0,
+          "max": 24.0,
+          "runs": 5,
+          "values": [
+            24.0,
+            24.0,
+            24.0,
+            24.0,
+            24.0
+          ]
+        },
+        "gang_slowdown_vs_isolated": {
+          "mean": 0.06291666666666666,
+          "min": 0.06041666666666667,
+          "max": 0.06458333333333334,
+          "runs": 5,
+          "values": [
+            0.06041666666666667,
+            0.06458333333333334,
+            0.06354166666666666,
+            0.06458333333333334,
+            0.06145833333333333
+          ]
+        },
+        "gang_completion_ratio": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0,
+          "runs": 5,
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "avg_small_wait_seconds": {
+          "mean": 12.514285714285716,
+          "min": 12.0,
+          "max": 12.857142857142858,
+          "runs": 5,
+          "values": [
+            12.285714285714286,
+            12.857142857142858,
+            12.714285714285714,
+            12.714285714285714,
+            12.0
+          ]
+        },
+        "avg_small_completion_seconds": {
+          "mean": 21.942857142857143,
+          "min": 21.428571428571427,
+          "max": 22.285714285714285,
+          "runs": 5,
+          "values": [
+            21.714285714285715,
+            22.285714285714285,
+            22.142857142857142,
+            22.142857142857142,
+            21.428571428571427
+          ]
+        },
+        "avg_small_slowdown_vs_isolated": {
+          "mean": 0.018841269841269843,
+          "min": 0.018412698412698412,
+          "max": 0.019126984126984128,
+          "runs": 5,
+          "values": [
+            0.01865079365079365,
+            0.019126984126984128,
+            0.01900793650793651,
+            0.01900793650793651,
+            0.018412698412698412
+          ]
+        },
+        "makespan_seconds": {
+          "mean": 61.6,
+          "min": 59.2,
+          "max": 63.2,
+          "runs": 5,
+          "values": [
+            59.2,
+            63.2,
+            62.2,
+            63.2,
+            60.2
+          ]
+        },
+        "throughput_jobs_per_minute": {
+          "mean": 7.797689050676601,
+          "min": 7.594936708860759,
+          "max": 8.108108108108107,
+          "runs": 5,
+          "values": [
+            8.108108108108107,
+            7.594936708860759,
+            7.717041800643086,
+            7.594936708860759,
+            7.973421926910299
+          ]
+        },
+        "throughput_gpu_per_minute": {
+          "mean": 35.08960072804471,
+          "min": 34.177215189873415,
+          "max": 36.486486486486484,
+          "runs": 5,
+          "values": [
+            36.486486486486484,
+            34.177215189873415,
+            34.72668810289389,
+            34.177215189873415,
+            35.880398671096344
+          ]
+        },
+        "topology_hit_rate": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "summaries": [
+        "test/results/final5-suite-rerun-20260419-v1/cohort-best-effort/seed-7/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/cohort-best-effort/seed-11/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/cohort-best-effort/seed-13/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/cohort-best-effort/seed-17/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/cohort-best-effort/seed-23/live-matrix-summary.json"
+      ]
+    },
+    "cohort-strict": {
+      "label": "cohort + StrictFIFO",
+      "arm": "strict-default-sensitivity",
+      "preset": "kueue-lingjun-gang-starvation-cohort",
+      "source_mode": "git",
+      "source_dir": null,
+      "git_url": "https://github.com/kubernetes-sigs/kueue.git",
+      "git_ref": "v0.15.0",
+      "checkpoint_path": null,
+      "runtime_policy": null,
+      "metrics": {
+        "head_gang_blocked_seconds": {
+          "mean": 53.2,
+          "min": 53.0,
+          "max": 54.0,
+          "runs": 5,
+          "values": [
+            53.0,
+            53.0,
+            53.0,
+            53.0,
+            54.0
+          ]
+        },
+        "head_gang_wait_to_runtime_ratio": {
+          "mean": 0.05541666666666667,
+          "min": 0.05520833333333333,
+          "max": 0.05625,
+          "runs": 5,
+          "values": [
+            0.05520833333333333,
+            0.05520833333333333,
+            0.05520833333333333,
+            0.05520833333333333,
+            0.05625
+          ]
+        },
+        "avg_gang_wait_seconds": {
+          "mean": 53.2,
+          "min": 53.0,
+          "max": 54.0,
+          "runs": 5,
+          "values": [
+            53.0,
+            53.0,
+            53.0,
+            53.0,
+            54.0
+          ]
+        },
+        "p95_gang_wait_seconds": {
+          "mean": 53.2,
+          "min": 53.0,
+          "max": 54.0,
+          "runs": 5,
+          "values": [
+            53.0,
+            53.0,
+            53.0,
+            53.0,
+            54.0
+          ]
+        },
+        "p99_gang_wait_seconds": {
+          "mean": 53.2,
+          "min": 53.0,
+          "max": 54.0,
+          "runs": 5,
+          "values": [
+            53.0,
+            53.0,
+            53.0,
+            53.0,
+            54.0
+          ]
+        },
+        "avg_gang_completion_seconds": {
+          "mean": 61.2,
+          "min": 61.0,
+          "max": 62.0,
+          "runs": 5,
+          "values": [
+            61.0,
+            61.0,
+            61.0,
+            61.0,
+            62.0
+          ]
+        },
+        "avg_topology_aware_wait_seconds": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "avg_topology_aware_completion_seconds": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "avg_critical_wait_seconds": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "avg_critical_completion_seconds": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "avg_elastic_wait_seconds": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "avg_elastic_completion_seconds": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "elastic_completion_ratio": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "critical_completion_ratio": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_bypass_count_while_gang_pending": {
+          "mean": 6.0,
+          "min": 6.0,
+          "max": 6.0,
+          "runs": 5,
+          "values": [
+            6.0,
+            6.0,
+            6.0,
+            6.0,
+            6.0
+          ]
+        },
+        "small_job_bypass_fraction_while_gang_pending": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0,
+          "runs": 5,
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "small_job_bypass_gpu_while_gang_pending": {
+          "mean": 24.0,
+          "min": 24.0,
+          "max": 24.0,
+          "runs": 5,
+          "values": [
+            24.0,
+            24.0,
+            24.0,
+            24.0,
+            24.0
+          ]
+        },
+        "small_job_head_flavor_admissions_while_gang_pending": {
+          "mean": 6.0,
+          "min": 6.0,
+          "max": 6.0,
+          "runs": 5,
+          "values": [
+            6.0,
+            6.0,
+            6.0,
+            6.0,
+            6.0
+          ]
+        },
+        "small_job_head_flavor_gpu_while_gang_pending": {
+          "mean": 24.0,
+          "min": 24.0,
+          "max": 24.0,
+          "runs": 5,
+          "values": [
+            24.0,
+            24.0,
+            24.0,
+            24.0,
+            24.0
+          ]
+        },
+        "gang_slowdown_vs_isolated": {
+          "mean": 0.06375,
+          "min": 0.06354166666666666,
+          "max": 0.06458333333333334,
+          "runs": 5,
+          "values": [
+            0.06354166666666666,
+            0.06354166666666666,
+            0.06354166666666666,
+            0.06354166666666666,
+            0.06458333333333334
+          ]
+        },
+        "gang_completion_ratio": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0,
+          "runs": 5,
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "avg_small_wait_seconds": {
+          "mean": 12.685714285714287,
+          "min": 12.285714285714286,
+          "max": 13.0,
+          "runs": 5,
+          "values": [
+            12.714285714285714,
+            12.285714285714286,
+            12.714285714285714,
+            13.0,
+            12.714285714285714
+          ]
+        },
+        "avg_small_completion_seconds": {
+          "mean": 22.114285714285714,
+          "min": 21.714285714285715,
+          "max": 22.428571428571427,
+          "runs": 5,
+          "values": [
+            22.142857142857142,
+            21.714285714285715,
+            22.142857142857142,
+            22.428571428571427,
+            22.142857142857142
+          ]
+        },
+        "avg_small_slowdown_vs_isolated": {
+          "mean": 0.018984126984126982,
+          "min": 0.01865079365079365,
+          "max": 0.01924603174603175,
+          "runs": 5,
+          "values": [
+            0.01900793650793651,
+            0.01865079365079365,
+            0.019007936507936505,
+            0.01924603174603175,
+            0.01900793650793651
+          ]
+        },
+        "makespan_seconds": {
+          "mean": 62.4,
+          "min": 62.2,
+          "max": 63.2,
+          "runs": 5,
+          "values": [
+            62.2,
+            62.2,
+            62.2,
+            62.2,
+            63.2
+          ]
+        },
+        "throughput_jobs_per_minute": {
+          "mean": 7.69262078228662,
+          "min": 7.594936708860759,
+          "max": 7.717041800643086,
+          "runs": 5,
+          "values": [
+            7.717041800643086,
+            7.717041800643086,
+            7.717041800643086,
+            7.717041800643086,
+            7.594936708860759
+          ]
+        },
+        "throughput_gpu_per_minute": {
+          "mean": 34.61679352028979,
+          "min": 34.177215189873415,
+          "max": 34.72668810289389,
+          "runs": 5,
+          "values": [
+            34.72668810289389,
+            34.72668810289389,
+            34.72668810289389,
+            34.72668810289389,
+            34.177215189873415
+          ]
+        },
+        "topology_hit_rate": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "summaries": [
+        "test/results/final5-suite-rerun-20260419-v1/cohort-strict/seed-7/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/cohort-strict/seed-11/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/cohort-strict/seed-13/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/cohort-strict/seed-17/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/cohort-strict/seed-23/live-matrix-summary.json"
+      ]
+    },
+    "cohort-learned": {
+      "label": "cohort + learned",
+      "arm": "learned-best-effort-default",
+      "preset": "kueue-lingjun-gang-starvation-cohort",
+      "source_mode": "local",
+      "source_dir": "/Users/abhigyan/Desktop/kueue",
+      "git_url": null,
+      "git_ref": null,
+      "checkpoint_path": "/Users/abhigyan/Desktop/kueue-reinsched-gang/test/results/checkpoints-rerun-20260419/admirl-cohort.pt",
+      "runtime_policy": null,
+      "metrics": {
+        "head_gang_blocked_seconds": {
+          "mean": 12.6,
+          "min": 12.0,
+          "max": 13.0,
+          "runs": 5,
+          "values": [
+            13.0,
+            12.0,
+            13.0,
+            13.0,
+            12.0
+          ]
+        },
+        "head_gang_wait_to_runtime_ratio": {
+          "mean": 0.013125000000000001,
+          "min": 0.0125,
+          "max": 0.013541666666666667,
+          "runs": 5,
+          "values": [
+            0.013541666666666667,
+            0.0125,
+            0.013541666666666667,
+            0.013541666666666667,
+            0.0125
+          ]
+        },
+        "avg_gang_wait_seconds": {
+          "mean": 12.6,
+          "min": 12.0,
+          "max": 13.0,
+          "runs": 5,
+          "values": [
+            13.0,
+            12.0,
+            13.0,
+            13.0,
+            12.0
+          ]
+        },
+        "p95_gang_wait_seconds": {
+          "mean": 12.6,
+          "min": 12.0,
+          "max": 13.0,
+          "runs": 5,
+          "values": [
+            13.0,
+            12.0,
+            13.0,
+            13.0,
+            12.0
+          ]
+        },
+        "p99_gang_wait_seconds": {
+          "mean": 12.6,
+          "min": 12.0,
+          "max": 13.0,
+          "runs": 5,
+          "values": [
+            13.0,
+            12.0,
+            13.0,
+            13.0,
+            12.0
+          ]
+        },
+        "avg_gang_completion_seconds": {
+          "mean": 20.6,
+          "min": 20.0,
+          "max": 21.0,
+          "runs": 5,
+          "values": [
+            21.0,
+            20.0,
+            21.0,
+            21.0,
+            20.0
+          ]
+        },
+        "avg_topology_aware_wait_seconds": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "avg_topology_aware_completion_seconds": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "avg_critical_wait_seconds": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "avg_critical_completion_seconds": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "avg_elastic_wait_seconds": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "avg_elastic_completion_seconds": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "elastic_completion_ratio": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "critical_completion_ratio": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_bypass_count_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_bypass_fraction_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_bypass_gpu_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_head_flavor_admissions_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_head_flavor_gpu_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "gang_slowdown_vs_isolated": {
+          "mean": 0.021458333333333333,
+          "min": 0.020833333333333332,
+          "max": 0.021875,
+          "runs": 5,
+          "values": [
+            0.021875,
+            0.020833333333333332,
+            0.021875,
+            0.021875,
+            0.020833333333333332
+          ]
+        },
+        "gang_completion_ratio": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0,
+          "runs": 5,
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "avg_small_wait_seconds": {
+          "mean": 25.171428571428567,
+          "min": 25.0,
+          "max": 25.285714285714285,
+          "runs": 5,
+          "values": [
+            25.142857142857142,
+            25.0,
+            25.142857142857142,
+            25.285714285714285,
+            25.285714285714285
+          ]
+        },
+        "avg_small_completion_seconds": {
+          "mean": 34.6,
+          "min": 34.42857142857143,
+          "max": 34.714285714285715,
+          "runs": 5,
+          "values": [
+            34.57142857142857,
+            34.42857142857143,
+            34.57142857142857,
+            34.714285714285715,
+            34.714285714285715
+          ]
+        },
+        "avg_small_slowdown_vs_isolated": {
+          "mean": 0.029404761904761906,
+          "min": 0.029246031746031746,
+          "max": 0.029563492063492063,
+          "runs": 5,
+          "values": [
+            0.029365079365079365,
+            0.029246031746031746,
+            0.029365079365079365,
+            0.029484126984126984,
+            0.029563492063492063
+          ]
+        },
+        "makespan_seconds": {
+          "mean": 61.6,
+          "min": 61.0,
+          "max": 62.0,
+          "runs": 5,
+          "values": [
+            62.0,
+            61.0,
+            62.0,
+            62.0,
+            61.0
+          ]
+        },
+        "throughput_jobs_per_minute": {
+          "mean": 7.792702273929139,
+          "min": 7.741935483870968,
+          "max": 7.868852459016393,
+          "runs": 5,
+          "values": [
+            7.741935483870968,
+            7.868852459016393,
+            7.741935483870968,
+            7.741935483870968,
+            7.868852459016393
+          ]
+        },
+        "throughput_gpu_per_minute": {
+          "mean": 35.067160232681125,
+          "min": 34.83870967741935,
+          "max": 35.40983606557377,
+          "runs": 5,
+          "values": [
+            34.83870967741935,
+            35.40983606557377,
+            34.83870967741935,
+            34.83870967741935,
+            35.40983606557377
+          ]
+        },
+        "topology_hit_rate": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "summaries": [
+        "test/results/final5-suite-rerun-20260419-v1/cohort-learned/seed-7/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/cohort-learned/seed-11/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/cohort-learned/seed-13/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/cohort-learned/seed-17/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/cohort-learned/seed-23/live-matrix-summary.json"
+      ]
+    },
+    "elastic-best-effort": {
+      "label": "elastic + BestEffortFIFO",
+      "arm": "stock-best-effort-default",
+      "preset": "kueue-lingjun-gang-elastic-topology",
+      "source_mode": "git",
+      "source_dir": null,
+      "git_url": "https://github.com/kubernetes-sigs/kueue.git",
+      "git_ref": "v0.15.0",
+      "checkpoint_path": null,
+      "runtime_policy": null,
+      "metrics": {
+        "head_gang_blocked_seconds": {
+          "mean": 1.2,
+          "min": 1.0,
+          "max": 2.0,
+          "runs": 5,
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            2.0
+          ]
+        },
+        "head_gang_wait_to_runtime_ratio": {
+          "mean": 0.00125,
+          "min": 0.0010416666666666667,
+          "max": 0.0020833333333333333,
+          "runs": 5,
+          "values": [
+            0.0010416666666666667,
+            0.0010416666666666667,
+            0.0010416666666666667,
+            0.0010416666666666667,
+            0.0020833333333333333
+          ]
+        },
+        "avg_gang_wait_seconds": {
+          "mean": 16.15,
+          "min": 15.0,
+          "max": 17.0,
+          "runs": 5,
+          "values": [
+            15.0,
+            16.75,
+            16.75,
+            17.0,
+            15.25
+          ]
+        },
+        "p95_gang_wait_seconds": {
+          "mean": 34.0,
+          "min": 34.0,
+          "max": 34.0,
+          "runs": 5,
+          "values": [
+            34.0,
+            34.0,
+            34.0,
+            34.0,
+            34.0
+          ]
+        },
+        "p99_gang_wait_seconds": {
+          "mean": 34.0,
+          "min": 34.0,
+          "max": 34.0,
+          "runs": 5,
+          "values": [
+            34.0,
+            34.0,
+            34.0,
+            34.0,
+            34.0
+          ]
+        },
+        "avg_gang_completion_seconds": {
+          "mean": 24.45,
+          "min": 23.25,
+          "max": 25.25,
+          "runs": 5,
+          "values": [
+            23.25,
+            25.0,
+            25.25,
+            25.25,
+            23.5
+          ]
+        },
+        "avg_topology_aware_wait_seconds": {
+          "mean": 29.0,
+          "min": 29.0,
+          "max": 29.0,
+          "runs": 5,
+          "values": [
+            29.0,
+            29.0,
+            29.0,
+            29.0,
+            29.0
+          ]
+        },
+        "avg_topology_aware_completion_seconds": {
+          "mean": 37.5,
+          "min": 37.5,
+          "max": 37.5,
+          "runs": 5,
+          "values": [
+            37.5,
+            37.5,
+            37.5,
+            37.5,
+            37.5
+          ]
+        },
+        "avg_critical_wait_seconds": {
+          "mean": 26.0,
+          "min": 24.0,
+          "max": 34.0,
+          "runs": 5,
+          "values": [
+            24.0,
+            24.0,
+            24.0,
+            24.0,
+            34.0
+          ]
+        },
+        "avg_critical_completion_seconds": {
+          "mean": 34.0,
+          "min": 32.0,
+          "max": 42.0,
+          "runs": 5,
+          "values": [
+            32.0,
+            32.0,
+            32.0,
+            32.0,
+            42.0
+          ]
+        },
+        "avg_elastic_wait_seconds": {
+          "mean": 32.0,
+          "min": 24.0,
+          "max": 34.0,
+          "runs": 5,
+          "values": [
+            34.0,
+            34.0,
+            34.0,
+            34.0,
+            24.0
+          ]
+        },
+        "avg_elastic_completion_seconds": {
+          "mean": 41.0,
+          "min": 33.0,
+          "max": 43.0,
+          "runs": 5,
+          "values": [
+            43.0,
+            43.0,
+            43.0,
+            43.0,
+            33.0
+          ]
+        },
+        "elastic_completion_ratio": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0,
+          "runs": 5,
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "critical_completion_ratio": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0,
+          "runs": 5,
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "small_job_bypass_count_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_bypass_fraction_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_bypass_gpu_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_head_flavor_admissions_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_head_flavor_gpu_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "gang_slowdown_vs_isolated": {
+          "mean": 0.025108796296296292,
+          "min": 0.02368634259259259,
+          "max": 0.02590856481481481,
+          "runs": 5,
+          "values": [
+            0.02368634259259259,
+            0.025630787037037035,
+            0.02590856481481481,
+            0.02590856481481481,
+            0.02440972222222222
+          ]
+        },
+        "gang_completion_ratio": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0,
+          "runs": 5,
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "avg_small_wait_seconds": {
+          "mean": 3.3,
+          "min": 2.0,
+          "max": 5.0,
+          "runs": 5,
+          "values": [
+            4.75,
+            2.0,
+            2.5,
+            2.25,
+            5.0
+          ]
+        },
+        "avg_small_completion_seconds": {
+          "mean": 9.8,
+          "min": 8.5,
+          "max": 11.5,
+          "runs": 5,
+          "values": [
+            11.25,
+            8.5,
+            9.0,
+            8.75,
+            11.5
+          ]
+        },
+        "avg_small_slowdown_vs_isolated": {
+          "mean": 0.01449074074074074,
+          "min": 0.01212962962962963,
+          "max": 0.017638888888888888,
+          "runs": 5,
+          "values": [
+            0.017222222222222222,
+            0.01212962962962963,
+            0.012870370370370372,
+            0.012592592592592594,
+            0.017638888888888888
+          ]
+        },
+        "makespan_seconds": {
+          "mean": 43.270270270270274,
+          "min": 42.4054054054054,
+          "max": 43.486486486486484,
+          "runs": 5,
+          "values": [
+            43.486486486486484,
+            43.486486486486484,
+            43.486486486486484,
+            43.486486486486484,
+            42.4054054054054
+          ]
+        },
+        "throughput_jobs_per_minute": {
+          "mean": 11.094191729837068,
+          "min": 11.037911746426353,
+          "max": 11.319311663479924,
+          "runs": 5,
+          "values": [
+            11.037911746426353,
+            11.037911746426353,
+            11.037911746426353,
+            11.037911746426353,
+            11.319311663479924
+          ]
+        },
+        "throughput_gpu_per_minute": {
+          "mean": 66.56515037902241,
+          "min": 66.22747047855812,
+          "max": 67.91586998087955,
+          "runs": 5,
+          "values": [
+            66.22747047855812,
+            66.22747047855812,
+            66.22747047855812,
+            66.22747047855812,
+            67.91586998087955
+          ]
+        },
+        "topology_hit_rate": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0,
+          "runs": 5,
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "summaries": [
+        "test/results/final5-suite-rerun-20260419-v1/elastic-best-effort/seed-7/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/elastic-best-effort/seed-11/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/elastic-best-effort/seed-13/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/elastic-best-effort/seed-17/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/elastic-best-effort/seed-23/live-matrix-summary.json"
+      ]
+    },
+    "elastic-strict": {
+      "label": "elastic + StrictFIFO",
+      "arm": "strict-default-sensitivity",
+      "preset": "kueue-lingjun-gang-elastic-topology",
+      "source_mode": "git",
+      "source_dir": null,
+      "git_url": "https://github.com/kubernetes-sigs/kueue.git",
+      "git_ref": "v0.15.0",
+      "checkpoint_path": null,
+      "runtime_policy": null,
+      "metrics": {
+        "head_gang_blocked_seconds": {
+          "mean": 1.2,
+          "min": 1.0,
+          "max": 2.0,
+          "runs": 5,
+          "values": [
+            2.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "head_gang_wait_to_runtime_ratio": {
+          "mean": 0.0012499999999999998,
+          "min": 0.0010416666666666667,
+          "max": 0.0020833333333333333,
+          "runs": 5,
+          "values": [
+            0.0020833333333333333,
+            0.0010416666666666667,
+            0.0010416666666666667,
+            0.0010416666666666667,
+            0.0010416666666666667
+          ]
+        },
+        "avg_gang_wait_seconds": {
+          "mean": 13.5,
+          "min": 12.5,
+          "max": 15.25,
+          "runs": 5,
+          "values": [
+            12.5,
+            15.25,
+            14.75,
+            12.5,
+            12.5
+          ]
+        },
+        "p95_gang_wait_seconds": {
+          "mean": 31.8,
+          "min": 24.0,
+          "max": 34.0,
+          "runs": 5,
+          "values": [
+            34.0,
+            34.0,
+            33.0,
+            24.0,
+            34.0
+          ]
+        },
+        "p99_gang_wait_seconds": {
+          "mean": 31.8,
+          "min": 24.0,
+          "max": 34.0,
+          "runs": 5,
+          "values": [
+            34.0,
+            34.0,
+            33.0,
+            24.0,
+            34.0
+          ]
+        },
+        "avg_gang_completion_seconds": {
+          "mean": 21.75,
+          "min": 20.75,
+          "max": 23.5,
+          "runs": 5,
+          "values": [
+            20.75,
+            23.5,
+            23.0,
+            20.75,
+            20.75
+          ]
+        },
+        "avg_topology_aware_wait_seconds": {
+          "mean": 22.6,
+          "min": 18.5,
+          "max": 24.0,
+          "runs": 5,
+          "values": [
+            23.5,
+            24.0,
+            23.5,
+            18.5,
+            23.5
+          ]
+        },
+        "avg_topology_aware_completion_seconds": {
+          "mean": 31.1,
+          "min": 27.0,
+          "max": 32.5,
+          "runs": 5,
+          "values": [
+            32.0,
+            32.5,
+            32.0,
+            27.0,
+            32.0
+          ]
+        },
+        "avg_critical_wait_seconds": {
+          "mean": 15.6,
+          "min": 13.0,
+          "max": 24.0,
+          "runs": 5,
+          "values": [
+            13.0,
+            14.0,
+            14.0,
+            24.0,
+            13.0
+          ]
+        },
+        "avg_critical_completion_seconds": {
+          "mean": 23.6,
+          "min": 21.0,
+          "max": 32.0,
+          "runs": 5,
+          "values": [
+            21.0,
+            22.0,
+            22.0,
+            32.0,
+            21.0
+          ]
+        },
+        "avg_elastic_wait_seconds": {
+          "mean": 29.6,
+          "min": 13.0,
+          "max": 34.0,
+          "runs": 5,
+          "values": [
+            34.0,
+            34.0,
+            33.0,
+            13.0,
+            34.0
+          ]
+        },
+        "avg_elastic_completion_seconds": {
+          "mean": 38.6,
+          "min": 22.0,
+          "max": 43.0,
+          "runs": 5,
+          "values": [
+            43.0,
+            43.0,
+            42.0,
+            22.0,
+            43.0
+          ]
+        },
+        "elastic_completion_ratio": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0,
+          "runs": 5,
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "critical_completion_ratio": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0,
+          "runs": 5,
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "small_job_bypass_count_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_bypass_fraction_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_bypass_gpu_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_head_flavor_admissions_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_head_flavor_gpu_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "gang_slowdown_vs_isolated": {
+          "mean": 0.022219907407407407,
+          "min": 0.020891203703703703,
+          "max": 0.023964120370370372,
+          "runs": 5,
+          "values": [
+            0.020891203703703703,
+            0.023964120370370372,
+            0.02345486111111111,
+            0.02188078703703704,
+            0.020908564814814814
+          ]
+        },
+        "gang_completion_ratio": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0,
+          "runs": 5,
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "avg_small_wait_seconds": {
+          "mean": 14.55,
+          "min": 8.0,
+          "max": 16.5,
+          "runs": 5,
+          "values": [
+            16.0,
+            16.25,
+            16.5,
+            8.0,
+            16.0
+          ]
+        },
+        "avg_small_completion_seconds": {
+          "mean": 21.05,
+          "min": 14.5,
+          "max": 23.0,
+          "runs": 5,
+          "values": [
+            22.5,
+            22.75,
+            23.0,
+            14.5,
+            22.5
+          ]
+        },
+        "avg_small_slowdown_vs_isolated": {
+          "mean": 0.032,
+          "min": 0.019212962962962963,
+          "max": 0.03578703703703704,
+          "runs": 5,
+          "values": [
+            0.03490740740740741,
+            0.03518518518518518,
+            0.03578703703703704,
+            0.019212962962962963,
+            0.03490740740740741
+          ]
+        },
+        "makespan_seconds": {
+          "mean": 42.94054054054054,
+          "min": 41.75675675675676,
+          "max": 43.486486486486484,
+          "runs": 5,
+          "values": [
+            43.486486486486484,
+            43.486486486486484,
+            42.486486486486484,
+            41.75675675675676,
+            43.486486486486484
+          ]
+        },
+        "throughput_jobs_per_minute": {
+          "mean": 11.18131815880223,
+          "min": 11.037911746426353,
+          "max": 11.495145631067961,
+          "runs": 5,
+          "values": [
+            11.037911746426353,
+            11.037911746426353,
+            11.297709923664122,
+            11.495145631067961,
+            11.037911746426353
+          ]
+        },
+        "throughput_gpu_per_minute": {
+          "mean": 67.08790895281336,
+          "min": 66.22747047855812,
+          "max": 68.97087378640776,
+          "runs": 5,
+          "values": [
+            66.22747047855812,
+            66.22747047855812,
+            67.78625954198473,
+            68.97087378640776,
+            66.22747047855812
+          ]
+        },
+        "topology_hit_rate": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0,
+          "runs": 5,
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "summaries": [
+        "test/results/final5-suite-rerun-20260419-v1/elastic-strict/seed-7/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/elastic-strict/seed-11/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/elastic-strict/seed-13/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/elastic-strict/seed-17/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/elastic-strict/seed-23/live-matrix-summary.json"
+      ]
+    },
+    "elastic-learned": {
+      "label": "elastic + learned",
+      "arm": "learned-elastic-default",
+      "preset": "kueue-lingjun-gang-elastic-topology",
+      "source_mode": "local",
+      "source_dir": "/Users/abhigyan/Desktop/kueue",
+      "git_url": null,
+      "git_ref": null,
+      "checkpoint_path": "/Users/abhigyan/Desktop/kueue-reinsched-gang/test/results/checkpoints-rerun-20260419/admirl-elastic.pt",
+      "runtime_policy": null,
+      "metrics": {
+        "head_gang_blocked_seconds": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0,
+          "runs": 5,
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "head_gang_wait_to_runtime_ratio": {
+          "mean": 0.0010416666666666667,
+          "min": 0.0010416666666666667,
+          "max": 0.0010416666666666667,
+          "runs": 5,
+          "values": [
+            0.0010416666666666667,
+            0.0010416666666666667,
+            0.0010416666666666667,
+            0.0010416666666666667,
+            0.0010416666666666667
+          ]
+        },
+        "avg_gang_wait_seconds": {
+          "mean": 5.666666666666667,
+          "min": 5.333333333333333,
+          "max": 6.0,
+          "runs": 5,
+          "values": [
+            5.666666666666667,
+            5.666666666666667,
+            5.333333333333333,
+            6.0,
+            5.666666666666667
+          ]
+        },
+        "p95_gang_wait_seconds": {
+          "mean": 14.2,
+          "min": 14.0,
+          "max": 15.0,
+          "runs": 5,
+          "values": [
+            14.0,
+            14.0,
+            14.0,
+            15.0,
+            14.0
+          ]
+        },
+        "p99_gang_wait_seconds": {
+          "mean": 14.2,
+          "min": 14.0,
+          "max": 15.0,
+          "runs": 5,
+          "values": [
+            14.0,
+            14.0,
+            14.0,
+            15.0,
+            14.0
+          ]
+        },
+        "avg_gang_completion_seconds": {
+          "mean": 13.666666666666666,
+          "min": 13.333333333333334,
+          "max": 14.0,
+          "runs": 5,
+          "values": [
+            13.666666666666666,
+            13.666666666666666,
+            13.333333333333334,
+            14.0,
+            13.666666666666666
+          ]
+        },
+        "avg_topology_aware_wait_seconds": {
+          "mean": 14.4,
+          "min": 14.0,
+          "max": 15.0,
+          "runs": 5,
+          "values": [
+            14.0,
+            14.5,
+            14.0,
+            15.0,
+            14.5
+          ]
+        },
+        "avg_topology_aware_completion_seconds": {
+          "mean": 23.9,
+          "min": 23.5,
+          "max": 24.5,
+          "runs": 5,
+          "values": [
+            23.5,
+            24.0,
+            23.5,
+            24.5,
+            24.0
+          ]
+        },
+        "avg_critical_wait_seconds": {
+          "mean": 14.2,
+          "min": 14.0,
+          "max": 15.0,
+          "runs": 5,
+          "values": [
+            14.0,
+            14.0,
+            14.0,
+            15.0,
+            14.0
+          ]
+        },
+        "avg_critical_completion_seconds": {
+          "mean": 22.2,
+          "min": 22.0,
+          "max": 23.0,
+          "runs": 5,
+          "values": [
+            22.0,
+            22.0,
+            22.0,
+            23.0,
+            22.0
+          ]
+        },
+        "avg_elastic_wait_seconds": {
+          "mean": 14.6,
+          "min": 14.0,
+          "max": 15.0,
+          "runs": 5,
+          "values": [
+            14.0,
+            15.0,
+            14.0,
+            15.0,
+            15.0
+          ]
+        },
+        "avg_elastic_completion_seconds": {
+          "mean": 25.6,
+          "min": 25.0,
+          "max": 26.0,
+          "runs": 5,
+          "values": [
+            25.0,
+            26.0,
+            25.0,
+            26.0,
+            26.0
+          ]
+        },
+        "elastic_completion_ratio": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0,
+          "runs": 5,
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "critical_completion_ratio": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0,
+          "runs": 5,
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "small_job_bypass_count_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_bypass_fraction_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_bypass_gpu_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_head_flavor_admissions_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "small_job_head_flavor_gpu_while_gang_pending": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "runs": 5,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "gang_slowdown_vs_isolated": {
+          "mean": 0.014976851851851852,
+          "min": 0.014606481481481482,
+          "max": 0.015347222222222222,
+          "runs": 5,
+          "values": [
+            0.014976851851851852,
+            0.014976851851851852,
+            0.014606481481481482,
+            0.015347222222222222,
+            0.014976851851851852
+          ]
+        },
+        "gang_completion_ratio": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0,
+          "runs": 5,
+          "values": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "avg_small_wait_seconds": {
+          "mean": 13.280000000000001,
+          "min": 13.0,
+          "max": 13.6,
+          "runs": 5,
+          "values": [
+            13.4,
+            13.2,
+            13.0,
+            13.6,
+            13.2
+          ]
+        },
+        "avg_small_completion_seconds": {
+          "mean": 20.68,
+          "min": 20.4,
+          "max": 21.0,
+          "runs": 5,
+          "values": [
+            20.8,
+            20.6,
+            20.4,
+            21.0,
+            20.6
+          ]
+        },
+        "avg_small_slowdown_vs_isolated": {
+          "mean": 0.028125925925925926,
+          "min": 0.02777777777777778,
+          "max": 0.028555555555555556,
+          "runs": 5,
+          "values": [
+            0.02837037037037037,
+            0.027962962962962967,
+            0.02777777777777778,
+            0.028555555555555556,
+            0.027962962962962967
+          ]
+        },
+        "makespan_seconds": {
+          "mean": 33.91891891891892,
+          "min": 33.91891891891892,
+          "max": 33.91891891891892,
+          "runs": 5,
+          "values": [
+            33.91891891891892,
+            33.91891891891892,
+            33.91891891891892,
+            33.91891891891892,
+            33.91891891891892
+          ]
+        },
+        "throughput_jobs_per_minute": {
+          "mean": 14.151394422310755,
+          "min": 14.151394422310757,
+          "max": 14.151394422310757,
+          "runs": 5,
+          "values": [
+            14.151394422310757,
+            14.151394422310757,
+            14.151394422310757,
+            14.151394422310757,
+            14.151394422310757
+          ]
+        },
+        "throughput_gpu_per_minute": {
+          "mean": 77.83266932270917,
+          "min": 77.83266932270917,
+          "max": 77.83266932270917,
+          "runs": 5,
+          "values": [
+            77.83266932270917,
+            77.83266932270917,
+            77.83266932270917,
+            77.83266932270917,
+            77.83266932270917
+          ]
+        },
+        "topology_hit_rate": {
+          "mean": 0.5,
+          "min": 0.5,
+          "max": 0.5,
+          "runs": 5,
+          "values": [
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ]
+        }
+      },
+      "summaries": [
+        "test/results/final5-suite-rerun-20260419-v1/elastic-learned/seed-7/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/elastic-learned/seed-11/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/elastic-learned/seed-13/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/elastic-learned/seed-17/live-matrix-summary.json",
+        "test/results/final5-suite-rerun-20260419-v1/elastic-learned/seed-23/live-matrix-summary.json"
+      ]
+    }
+  },
+  "comparisons": {
+    "cohort-best-effort-vs-learned": {
+      "baseline": "cohort + BestEffortFIFO",
+      "candidate": "cohort + learned",
+      "metrics": {
+        "head_gang_blocked_seconds": {
+          "direction": "lower",
+          "baseline_mean": 52.4,
+          "candidate_mean": 12.6,
+          "improvement_fraction_mean": 0.7592919801044108,
+          "improvement_fraction_min": 0.74,
+          "improvement_fraction_max": 0.7777777777777778,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_gang_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 52.4,
+          "candidate_mean": 12.6,
+          "improvement_fraction_mean": 0.7592919801044108,
+          "improvement_fraction_min": 0.74,
+          "improvement_fraction_max": 0.7777777777777778,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "p95_gang_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 52.4,
+          "candidate_mean": 12.6,
+          "improvement_fraction_mean": 0.7592919801044108,
+          "improvement_fraction_min": 0.74,
+          "improvement_fraction_max": 0.7777777777777778,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "p99_gang_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 52.4,
+          "candidate_mean": 12.6,
+          "improvement_fraction_mean": 0.7592919801044108,
+          "improvement_fraction_min": 0.74,
+          "improvement_fraction_max": 0.7777777777777778,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_gang_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 60.4,
+          "candidate_mean": 20.6,
+          "improvement_fraction_mean": 0.6586790731945377,
+          "improvement_fraction_min": 0.6379310344827587,
+          "improvement_fraction_max": 0.6774193548387096,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_topology_aware_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "avg_topology_aware_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "avg_critical_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "avg_critical_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "avg_elastic_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "avg_elastic_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "elastic_completion_ratio": {
+          "direction": "higher",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "critical_completion_ratio": {
+          "direction": "higher",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "small_job_bypass_count_while_gang_pending": {
+          "direction": "lower",
+          "baseline_mean": 6.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 1.0,
+          "improvement_fraction_min": 1.0,
+          "improvement_fraction_max": 1.0,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "small_job_bypass_fraction_while_gang_pending": {
+          "direction": "lower",
+          "baseline_mean": 1.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 1.0,
+          "improvement_fraction_min": 1.0,
+          "improvement_fraction_max": 1.0,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "small_job_head_flavor_admissions_while_gang_pending": {
+          "direction": "lower",
+          "baseline_mean": 6.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 1.0,
+          "improvement_fraction_min": 1.0,
+          "improvement_fraction_max": 1.0,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "small_job_head_flavor_gpu_while_gang_pending": {
+          "direction": "lower",
+          "baseline_mean": 24.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 1.0,
+          "improvement_fraction_min": 1.0,
+          "improvement_fraction_max": 1.0,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "gang_slowdown_vs_isolated": {
+          "direction": "lower",
+          "baseline_mean": 0.06291666666666666,
+          "candidate_mean": 0.021458333333333333,
+          "improvement_fraction_mean": 0.6586790731945378,
+          "improvement_fraction_min": 0.6379310344827587,
+          "improvement_fraction_max": 0.6774193548387097,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_small_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 12.514285714285716,
+          "candidate_mean": 25.171428571428567,
+          "improvement_fraction_mean": -1.012878212865148,
+          "improvement_fraction_min": -1.107142857142857,
+          "improvement_fraction_max": -0.9444444444444444,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "avg_small_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 21.942857142857143,
+          "candidate_mean": 34.6,
+          "improvement_fraction_mean": -0.5772018632188411,
+          "improvement_fraction_min": -0.6200000000000002,
+          "improvement_fraction_max": -0.544871794871795,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "avg_small_slowdown_vs_isolated": {
+          "direction": "lower",
+          "baseline_mean": 0.018841269841269843,
+          "candidate_mean": 0.029404761904761906,
+          "improvement_fraction_mean": -0.5610301158917055,
+          "improvement_fraction_min": -0.6056034482758621,
+          "improvement_fraction_max": -0.5290456431535269,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "makespan_seconds": {
+          "direction": "lower",
+          "baseline_mean": 61.6,
+          "candidate_mean": 61.6,
+          "improvement_fraction_mean": -0.000714686280823178,
+          "improvement_fraction_min": -0.047297297297297244,
+          "improvement_fraction_max": 0.03481012658227853,
+          "candidate_wins": 3,
+          "runs": 5
+        },
+        "throughput_jobs_per_minute": {
+          "direction": "higher",
+          "baseline_mean": 7.797689050676601,
+          "candidate_mean": 7.792702273929139,
+          "improvement_fraction_mean": 7.403490216824384e-05,
+          "improvement_fraction_min": -0.04516129032258049,
+          "improvement_fraction_max": 0.036065573770491834,
+          "candidate_wins": 3,
+          "runs": 5
+        },
+        "throughput_gpu_per_minute": {
+          "direction": "higher",
+          "baseline_mean": 35.08960072804471,
+          "candidate_mean": 35.067160232681125,
+          "improvement_fraction_mean": 7.403490216818798e-05,
+          "improvement_fraction_min": -0.045161290322580656,
+          "improvement_fraction_max": 0.03606557377049189,
+          "candidate_wins": 3,
+          "runs": 5
+        },
+        "job_completion_ratio": {
+          "direction": "higher",
+          "baseline_mean": 1.0,
+          "candidate_mean": 1.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "gang_completion_ratio": {
+          "direction": "higher",
+          "baseline_mean": 1.0,
+          "candidate_mean": 1.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "topology_hit_rate": {
+          "direction": "higher",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        }
+      }
+    },
+    "cohort-strict-vs-learned": {
+      "baseline": "cohort + StrictFIFO",
+      "candidate": "cohort + learned",
+      "metrics": {
+        "head_gang_blocked_seconds": {
+          "direction": "lower",
+          "baseline_mean": 53.2,
+          "candidate_mean": 12.6,
+          "improvement_fraction_mean": 0.7631027253668764,
+          "improvement_fraction_min": 0.7547169811320755,
+          "improvement_fraction_max": 0.7777777777777778,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_gang_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 53.2,
+          "candidate_mean": 12.6,
+          "improvement_fraction_mean": 0.7631027253668764,
+          "improvement_fraction_min": 0.7547169811320755,
+          "improvement_fraction_max": 0.7777777777777778,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "p95_gang_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 53.2,
+          "candidate_mean": 12.6,
+          "improvement_fraction_mean": 0.7631027253668764,
+          "improvement_fraction_min": 0.7547169811320755,
+          "improvement_fraction_max": 0.7777777777777778,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "p99_gang_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 53.2,
+          "candidate_mean": 12.6,
+          "improvement_fraction_mean": 0.7631027253668764,
+          "improvement_fraction_min": 0.7547169811320755,
+          "improvement_fraction_max": 0.7777777777777778,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_gang_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 61.2,
+          "candidate_mean": 20.6,
+          "improvement_fraction_mean": 0.6633527234267582,
+          "improvement_fraction_min": 0.6557377049180327,
+          "improvement_fraction_max": 0.6774193548387096,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_topology_aware_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "avg_topology_aware_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "avg_critical_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "avg_critical_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "avg_elastic_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "avg_elastic_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "elastic_completion_ratio": {
+          "direction": "higher",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "critical_completion_ratio": {
+          "direction": "higher",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "small_job_bypass_count_while_gang_pending": {
+          "direction": "lower",
+          "baseline_mean": 6.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 1.0,
+          "improvement_fraction_min": 1.0,
+          "improvement_fraction_max": 1.0,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "small_job_bypass_fraction_while_gang_pending": {
+          "direction": "lower",
+          "baseline_mean": 1.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 1.0,
+          "improvement_fraction_min": 1.0,
+          "improvement_fraction_max": 1.0,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "small_job_head_flavor_admissions_while_gang_pending": {
+          "direction": "lower",
+          "baseline_mean": 6.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 1.0,
+          "improvement_fraction_min": 1.0,
+          "improvement_fraction_max": 1.0,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "small_job_head_flavor_gpu_while_gang_pending": {
+          "direction": "lower",
+          "baseline_mean": 24.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 1.0,
+          "improvement_fraction_min": 1.0,
+          "improvement_fraction_max": 1.0,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "gang_slowdown_vs_isolated": {
+          "direction": "lower",
+          "baseline_mean": 0.06375,
+          "candidate_mean": 0.021458333333333333,
+          "improvement_fraction_mean": 0.6633527234267582,
+          "improvement_fraction_min": 0.6557377049180327,
+          "improvement_fraction_max": 0.6774193548387097,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_small_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 12.685714285714287,
+          "candidate_mean": 25.171428571428567,
+          "improvement_fraction_mean": -0.9847517781408557,
+          "improvement_fraction_min": -1.0348837209302324,
+          "improvement_fraction_max": -0.945054945054945,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "avg_small_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 22.114285714285714,
+          "candidate_mean": 34.6,
+          "improvement_fraction_mean": -0.5647239194143155,
+          "improvement_fraction_min": -0.5855263157894737,
+          "improvement_fraction_max": -0.5477707006369428,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "avg_small_slowdown_vs_isolated": {
+          "direction": "lower",
+          "baseline_mean": 0.018984126984126982,
+          "candidate_mean": 0.029404761904761906,
+          "improvement_fraction_mean": -0.5490275629979655,
+          "improvement_fraction_min": -0.5680851063829787,
+          "improvement_fraction_max": -0.5319587628865976,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "makespan_seconds": {
+          "direction": "lower",
+          "baseline_mean": 62.4,
+          "candidate_mean": 61.6,
+          "improvement_fraction_mean": 0.012749806666938058,
+          "improvement_fraction_min": 0.0032154340836013317,
+          "improvement_fraction_max": 0.03481012658227853,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "throughput_jobs_per_minute": {
+          "direction": "higher",
+          "baseline_mean": 7.69262078228662,
+          "candidate_mean": 7.792702273929139,
+          "improvement_fraction_mean": 0.013083024854574393,
+          "improvement_fraction_min": 0.0032258064516130273,
+          "improvement_fraction_max": 0.036065573770491834,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "throughput_gpu_per_minute": {
+          "direction": "higher",
+          "baseline_mean": 34.61679352028979,
+          "candidate_mean": 35.067160232681125,
+          "improvement_fraction_mean": 0.01308302485457433,
+          "improvement_fraction_min": 0.0032258064516128993,
+          "improvement_fraction_max": 0.03606557377049189,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "job_completion_ratio": {
+          "direction": "higher",
+          "baseline_mean": 1.0,
+          "candidate_mean": 1.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "gang_completion_ratio": {
+          "direction": "higher",
+          "baseline_mean": 1.0,
+          "candidate_mean": 1.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "topology_hit_rate": {
+          "direction": "higher",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        }
+      }
+    },
+    "elastic-best-effort-vs-learned": {
+      "baseline": "elastic + BestEffortFIFO",
+      "candidate": "elastic + learned",
+      "metrics": {
+        "head_gang_blocked_seconds": {
+          "direction": "lower",
+          "baseline_mean": 1.2,
+          "candidate_mean": 1.0,
+          "improvement_fraction_mean": 0.1,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.5,
+          "candidate_wins": 1,
+          "runs": 5
+        },
+        "avg_gang_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 16.15,
+          "candidate_mean": 5.666666666666667,
+          "improvement_fraction_mean": 0.6481959856775268,
+          "improvement_fraction_min": 0.6222222222222221,
+          "improvement_fraction_max": 0.6815920398009951,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "p95_gang_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 34.0,
+          "candidate_mean": 14.2,
+          "improvement_fraction_mean": 0.5823529411764705,
+          "improvement_fraction_min": 0.5588235294117647,
+          "improvement_fraction_max": 0.5882352941176471,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "p99_gang_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 34.0,
+          "candidate_mean": 14.2,
+          "improvement_fraction_mean": 0.5823529411764705,
+          "improvement_fraction_min": 0.5588235294117647,
+          "improvement_fraction_max": 0.5882352941176471,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_gang_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 24.45,
+          "candidate_mean": 13.666666666666666,
+          "improvement_fraction_mean": 0.4402902357497246,
+          "improvement_fraction_min": 0.4121863799283154,
+          "improvement_fraction_max": 0.47194719471947194,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_topology_aware_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 29.0,
+          "candidate_mean": 14.4,
+          "improvement_fraction_mean": 0.503448275862069,
+          "improvement_fraction_min": 0.4827586206896552,
+          "improvement_fraction_max": 0.5172413793103449,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_topology_aware_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 37.5,
+          "candidate_mean": 23.9,
+          "improvement_fraction_mean": 0.3626666666666667,
+          "improvement_fraction_min": 0.3466666666666667,
+          "improvement_fraction_max": 0.37333333333333335,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_critical_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 26.0,
+          "candidate_mean": 14.2,
+          "improvement_fraction_mean": 0.44264705882352945,
+          "improvement_fraction_min": 0.375,
+          "improvement_fraction_max": 0.5882352941176471,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_critical_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 34.0,
+          "candidate_mean": 22.2,
+          "improvement_fraction_mean": 0.33898809523809526,
+          "improvement_fraction_min": 0.28125,
+          "improvement_fraction_max": 0.47619047619047616,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_elastic_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 32.0,
+          "candidate_mean": 14.6,
+          "improvement_fraction_mean": 0.5338235294117647,
+          "improvement_fraction_min": 0.375,
+          "improvement_fraction_max": 0.5882352941176471,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_elastic_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 41.0,
+          "candidate_mean": 25.6,
+          "improvement_fraction_mean": 0.36800563777307965,
+          "improvement_fraction_min": 0.21212121212121213,
+          "improvement_fraction_max": 0.4186046511627907,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "elastic_completion_ratio": {
+          "direction": "higher",
+          "baseline_mean": 1.0,
+          "candidate_mean": 1.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "critical_completion_ratio": {
+          "direction": "higher",
+          "baseline_mean": 1.0,
+          "candidate_mean": 1.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "small_job_bypass_count_while_gang_pending": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "small_job_bypass_fraction_while_gang_pending": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "small_job_head_flavor_admissions_while_gang_pending": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "small_job_head_flavor_gpu_while_gang_pending": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "gang_slowdown_vs_isolated": {
+          "direction": "lower",
+          "baseline_mean": 0.025108796296296292,
+          "candidate_mean": 0.014976851851851852,
+          "improvement_fraction_mean": 0.40273562737796365,
+          "improvement_fraction_min": 0.36770095284632287,
+          "improvement_fraction_max": 0.43622961804779975,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_small_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 3.3,
+          "candidate_mean": 13.280000000000001,
+          "improvement_fraction_mean": -3.6610994152046787,
+          "improvement_fraction_min": -5.6,
+          "improvement_fraction_max": -1.64,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "avg_small_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 9.8,
+          "candidate_mean": 20.68,
+          "improvement_fraction_mean": -1.1460778630292698,
+          "improvement_fraction_min": -1.4235294117647062,
+          "improvement_fraction_max": -0.791304347826087,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "avg_small_slowdown_vs_isolated": {
+          "direction": "lower",
+          "baseline_mean": 0.01449074074074074,
+          "candidate_mean": 0.028125925925925926,
+          "improvement_fraction_mean": -0.992775523359241,
+          "improvement_fraction_min": -1.305343511450382,
+          "improvement_fraction_max": -0.5853018372703416,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "makespan_seconds": {
+          "direction": "lower",
+          "baseline_mean": 43.270270270270274,
+          "candidate_mean": 33.91891891891892,
+          "improvement_fraction_mean": 0.2160354380098244,
+          "improvement_fraction_min": 0.20012746972594003,
+          "improvement_fraction_max": 0.22001243008079546,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "throughput_jobs_per_minute": {
+          "direction": "higher",
+          "baseline_mean": 11.094191729837068,
+          "candidate_mean": 14.151394422310755,
+          "improvement_fraction_mean": 0.2756972111553783,
+          "improvement_fraction_min": 0.2501992031872509,
+          "improvement_fraction_max": 0.2820717131474102,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "throughput_gpu_per_minute": {
+          "direction": "higher",
+          "baseline_mean": 66.56515037902241,
+          "candidate_mean": 77.83266932270917,
+          "improvement_fraction_mean": 0.1693891102257635,
+          "improvement_fraction_min": 0.14601593625497997,
+          "improvement_fraction_max": 0.17523240371845938,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "job_completion_ratio": {
+          "direction": "higher",
+          "baseline_mean": 1.0,
+          "candidate_mean": 1.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "gang_completion_ratio": {
+          "direction": "higher",
+          "baseline_mean": 1.0,
+          "candidate_mean": 1.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "topology_hit_rate": {
+          "direction": "higher",
+          "baseline_mean": 1.0,
+          "candidate_mean": 0.5,
+          "improvement_fraction_mean": -0.5,
+          "improvement_fraction_min": -0.5,
+          "improvement_fraction_max": -0.5,
+          "candidate_wins": 0,
+          "runs": 5
+        }
+      }
+    },
+    "elastic-strict-vs-learned": {
+      "baseline": "elastic + StrictFIFO",
+      "candidate": "elastic + learned",
+      "metrics": {
+        "head_gang_blocked_seconds": {
+          "direction": "lower",
+          "baseline_mean": 1.2,
+          "candidate_mean": 1.0,
+          "improvement_fraction_mean": 0.1,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.5,
+          "candidate_wins": 1,
+          "runs": 5
+        },
+        "avg_gang_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 13.5,
+          "candidate_mean": 5.666666666666667,
+          "improvement_fraction_mean": 0.5760333425951654,
+          "improvement_fraction_min": 0.52,
+          "improvement_fraction_max": 0.6384180790960453,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "p95_gang_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 31.8,
+          "candidate_mean": 14.2,
+          "improvement_fraction_mean": 0.5430926916221035,
+          "improvement_fraction_min": 0.375,
+          "improvement_fraction_max": 0.5882352941176471,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "p99_gang_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 31.8,
+          "candidate_mean": 14.2,
+          "improvement_fraction_mean": 0.5430926916221035,
+          "improvement_fraction_min": 0.375,
+          "improvement_fraction_max": 0.5882352941176471,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_gang_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 21.75,
+          "candidate_mean": 13.666666666666666,
+          "improvement_fraction_mean": 0.3693523399797154,
+          "improvement_fraction_min": 0.3253012048192771,
+          "improvement_fraction_max": 0.42028985507246375,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_topology_aware_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 22.6,
+          "candidate_mean": 14.4,
+          "improvement_fraction_mean": 0.35530237684493005,
+          "improvement_fraction_min": 0.1891891891891892,
+          "improvement_fraction_max": 0.40425531914893614,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_topology_aware_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 31.1,
+          "candidate_mean": 23.9,
+          "improvement_fraction_mean": 0.22707621082621082,
+          "improvement_fraction_min": 0.09259259259259259,
+          "improvement_fraction_max": 0.265625,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_critical_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 15.6,
+          "candidate_mean": 14.2,
+          "improvement_fraction_mean": 0.044230769230769226,
+          "improvement_fraction_min": -0.07692307692307693,
+          "improvement_fraction_max": 0.375,
+          "candidate_wins": 1,
+          "runs": 5
+        },
+        "avg_critical_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 23.6,
+          "candidate_mean": 22.2,
+          "improvement_fraction_mean": 0.03720238095238095,
+          "improvement_fraction_min": -0.047619047619047616,
+          "improvement_fraction_max": 0.28125,
+          "candidate_wins": 1,
+          "runs": 5
+        },
+        "avg_elastic_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 29.6,
+          "candidate_mean": 14.6,
+          "improvement_fraction_mean": 0.4255587549705197,
+          "improvement_fraction_min": -0.15384615384615385,
+          "improvement_fraction_max": 0.5882352941176471,
+          "candidate_wins": 4,
+          "runs": 5
+        },
+        "avg_elastic_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 38.6,
+          "candidate_mean": 25.6,
+          "improvement_fraction_mean": 0.28644920970502363,
+          "improvement_fraction_min": -0.18181818181818182,
+          "improvement_fraction_max": 0.4186046511627907,
+          "candidate_wins": 4,
+          "runs": 5
+        },
+        "elastic_completion_ratio": {
+          "direction": "higher",
+          "baseline_mean": 1.0,
+          "candidate_mean": 1.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "critical_completion_ratio": {
+          "direction": "higher",
+          "baseline_mean": 1.0,
+          "candidate_mean": 1.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "small_job_bypass_count_while_gang_pending": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "small_job_bypass_fraction_while_gang_pending": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "small_job_head_flavor_admissions_while_gang_pending": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "small_job_head_flavor_gpu_while_gang_pending": {
+          "direction": "lower",
+          "baseline_mean": 0.0,
+          "candidate_mean": 0.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "gang_slowdown_vs_isolated": {
+          "direction": "lower",
+          "baseline_mean": 0.022219907407407407,
+          "candidate_mean": 0.014976851851851852,
+          "improvement_fraction_mean": 0.32353602204964443,
+          "improvement_fraction_min": 0.28310249307479224,
+          "improvement_fraction_max": 0.37725141870219586,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "avg_small_wait_seconds": {
+          "direction": "lower",
+          "baseline_mean": 14.55,
+          "candidate_mean": 13.280000000000001,
+          "improvement_fraction_mean": 0.007462703962703987,
+          "improvement_fraction_min": -0.7,
+          "improvement_fraction_max": 0.21212121212121213,
+          "candidate_wins": 4,
+          "runs": 5
+        },
+        "avg_small_completion_seconds": {
+          "direction": "lower",
+          "baseline_mean": 21.05,
+          "candidate_mean": 20.68,
+          "improvement_fraction_mean": -0.016145377860520303,
+          "improvement_fraction_min": -0.4482758620689655,
+          "improvement_fraction_max": 0.11304347826086962,
+          "candidate_wins": 4,
+          "runs": 5
+        },
+        "avg_small_slowdown_vs_isolated": {
+          "direction": "lower",
+          "baseline_mean": 0.032,
+          "candidate_mean": 0.028125925925925926,
+          "improvement_fraction_mean": 0.06580167154485098,
+          "improvement_fraction_min": -0.4862650602409639,
+          "improvement_fraction_max": 0.22380336351875812,
+          "candidate_wins": 4,
+          "runs": 5
+        },
+        "makespan_seconds": {
+          "direction": "lower",
+          "baseline_mean": 42.94054054054054,
+          "candidate_mean": 33.91891891891892,
+          "improvement_fraction_mean": 0.20987869992698216,
+          "improvement_fraction_min": 0.1877022653721683,
+          "improvement_fraction_max": 0.22001243008079546,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "throughput_jobs_per_minute": {
+          "direction": "higher",
+          "baseline_mean": 11.18131815880223,
+          "candidate_mean": 14.151394422310755,
+          "improvement_fraction_mean": 0.2659760956175298,
+          "improvement_fraction_min": 0.23107569721115534,
+          "improvement_fraction_max": 0.2820717131474102,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "throughput_gpu_per_minute": {
+          "direction": "higher",
+          "baseline_mean": 67.08790895281336,
+          "candidate_mean": 77.83266932270917,
+          "improvement_fraction_mean": 0.16047808764940236,
+          "improvement_fraction_min": 0.12848605577689248,
+          "improvement_fraction_max": 0.17523240371845938,
+          "candidate_wins": 5,
+          "runs": 5
+        },
+        "job_completion_ratio": {
+          "direction": "higher",
+          "baseline_mean": 1.0,
+          "candidate_mean": 1.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "gang_completion_ratio": {
+          "direction": "higher",
+          "baseline_mean": 1.0,
+          "candidate_mean": 1.0,
+          "improvement_fraction_mean": 0.0,
+          "improvement_fraction_min": 0.0,
+          "improvement_fraction_max": 0.0,
+          "candidate_wins": 0,
+          "runs": 5
+        },
+        "topology_hit_rate": {
+          "direction": "higher",
+          "baseline_mean": 1.0,
+          "candidate_mean": 0.5,
+          "improvement_fraction_mean": -0.5,
+          "improvement_fraction_min": -0.5,
+          "improvement_fraction_max": -0.5,
+          "candidate_wins": 0,
+          "runs": 5
+        }
+      }
+    }
+  }
+}

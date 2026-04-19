@@ -1,0 +1,259 @@
+{
+  "apiVersion": "v1",
+  "kind": "Namespace",
+  "metadata": {
+    "name": "kueue-strict-default-sensitivity-1776617349",
+    "labels": {
+      "kueue-managed": "true"
+    }
+  }
+}
+---
+{
+  "apiVersion": "kueue.x-k8s.io/v1beta2",
+  "kind": "Topology",
+  "metadata": {
+    "name": "default"
+  },
+  "spec": {
+    "levels": [
+      {
+        "nodeLabel": "cloud.provider.com/topology-block"
+      },
+      {
+        "nodeLabel": "kubernetes.io/hostname"
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "kueue.x-k8s.io/v1beta2",
+  "kind": "ResourceFlavor",
+  "metadata": {
+    "name": "rf-4gpu-c"
+  },
+  "spec": {
+    "nodeLabels": {
+      "admirl.ai/flavor": "rf-4gpu-c",
+      "cloud.provider.com/node-group": "rf-4gpu-c"
+    },
+    "topologyName": "default"
+  }
+}
+---
+{
+  "apiVersion": "kueue.x-k8s.io/v1beta2",
+  "kind": "ResourceFlavor",
+  "metadata": {
+    "name": "rf-4gpu-a"
+  },
+  "spec": {
+    "nodeLabels": {
+      "admirl.ai/flavor": "rf-4gpu-a",
+      "cloud.provider.com/node-group": "rf-4gpu-a"
+    },
+    "topologyName": "default"
+  }
+}
+---
+{
+  "apiVersion": "kueue.x-k8s.io/v1beta2",
+  "kind": "ResourceFlavor",
+  "metadata": {
+    "name": "rf-4gpu-b"
+  },
+  "spec": {
+    "nodeLabels": {
+      "admirl.ai/flavor": "rf-4gpu-b",
+      "cloud.provider.com/node-group": "rf-4gpu-b"
+    },
+    "topologyName": "default"
+  }
+}
+---
+{
+  "apiVersion": "kueue.x-k8s.io/v1beta2",
+  "kind": "ClusterQueue",
+  "metadata": {
+    "name": "cq-kueue-strict-default-sensitivity-1776617349-gang"
+  },
+  "spec": {
+    "cohortName": "cohort-kueue-strict-default-sensitivity-1776617349",
+    "namespaceSelector": {},
+    "queueingStrategy": "StrictFIFO",
+    "admissionScope": {
+      "admissionMode": "UsageBasedAdmissionFairSharing"
+    },
+    "resourceGroups": [
+      {
+        "coveredResources": [
+          "cpu",
+          "memory",
+          "admirl.ai/gpu"
+        ],
+        "flavors": [
+          {
+            "name": "rf-4gpu-c",
+            "resources": [
+              {
+                "name": "cpu",
+                "nominalQuota": "24"
+              },
+              {
+                "name": "memory",
+                "nominalQuota": "96Gi"
+              },
+              {
+                "name": "admirl.ai/gpu",
+                "nominalQuota": "4"
+              }
+            ]
+          },
+          {
+            "name": "rf-4gpu-a",
+            "resources": [
+              {
+                "name": "cpu",
+                "nominalQuota": "12"
+              },
+              {
+                "name": "memory",
+                "nominalQuota": "48Gi"
+              },
+              {
+                "name": "admirl.ai/gpu",
+                "nominalQuota": "2"
+              }
+            ]
+          },
+          {
+            "name": "rf-4gpu-b",
+            "resources": [
+              {
+                "name": "cpu",
+                "nominalQuota": "24"
+              },
+              {
+                "name": "memory",
+                "nominalQuota": "96Gi"
+              },
+              {
+                "name": "admirl.ai/gpu",
+                "nominalQuota": "4"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "kueue.x-k8s.io/v1beta2",
+  "kind": "ClusterQueue",
+  "metadata": {
+    "name": "cq-kueue-strict-default-sensitivity-1776617349-small"
+  },
+  "spec": {
+    "cohortName": "cohort-kueue-strict-default-sensitivity-1776617349",
+    "namespaceSelector": {},
+    "queueingStrategy": "StrictFIFO",
+    "admissionScope": {
+      "admissionMode": "UsageBasedAdmissionFairSharing"
+    },
+    "resourceGroups": [
+      {
+        "coveredResources": [
+          "cpu",
+          "memory",
+          "admirl.ai/gpu"
+        ],
+        "flavors": [
+          {
+            "name": "rf-4gpu-c",
+            "resources": [
+              {
+                "name": "cpu",
+                "nominalQuota": "24"
+              },
+              {
+                "name": "memory",
+                "nominalQuota": "96Gi"
+              },
+              {
+                "name": "admirl.ai/gpu",
+                "nominalQuota": "4"
+              }
+            ]
+          },
+          {
+            "name": "rf-4gpu-a",
+            "resources": [
+              {
+                "name": "cpu",
+                "nominalQuota": "12"
+              },
+              {
+                "name": "memory",
+                "nominalQuota": "48Gi"
+              },
+              {
+                "name": "admirl.ai/gpu",
+                "nominalQuota": "2"
+              }
+            ]
+          },
+          {
+            "name": "rf-4gpu-b",
+            "resources": [
+              {
+                "name": "cpu",
+                "nominalQuota": "24"
+              },
+              {
+                "name": "memory",
+                "nominalQuota": "96Gi"
+              },
+              {
+                "name": "admirl.ai/gpu",
+                "nominalQuota": "4"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+---
+{
+  "apiVersion": "kueue.x-k8s.io/v1beta2",
+  "kind": "LocalQueue",
+  "metadata": {
+    "namespace": "kueue-strict-default-sensitivity-1776617349",
+    "name": "lq-eet-gang"
+  },
+  "spec": {
+    "clusterQueue": "cq-kueue-strict-default-sensitivity-1776617349-gang",
+    "fairSharing": {
+      "weight": "1"
+    }
+  }
+}
+---
+{
+  "apiVersion": "kueue.x-k8s.io/v1beta2",
+  "kind": "LocalQueue",
+  "metadata": {
+    "namespace": "kueue-strict-default-sensitivity-1776617349",
+    "name": "lq-eet-small"
+  },
+  "spec": {
+    "clusterQueue": "cq-kueue-strict-default-sensitivity-1776617349-small",
+    "fairSharing": {
+      "weight": "1"
+    }
+  }
+}
