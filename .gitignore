@@ -9,12 +9,6 @@ venv/
 .pytest_cache/
 .mypy_cache/
 
-test/results/
-*.pt
-*.pth
-*.ckpt
-*.jsonl
-
 model_server/*.log
 *.log
 paper
