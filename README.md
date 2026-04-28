@@ -108,19 +108,34 @@ Headline committed results:
 | Elastic vs `BestEffortFIFO` | Learned workload--flavor ranking lowers wait and completion times |
 | Elastic vs `StrictFIFO` | Learning helps most when FIFO provides the weakest flavor signal |
 
-Representative plots:
+Main comparison plots:
 
-![Cohort benchmark](figures/final5_cohort_best_effort_vs_learned.png)
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <b>Cohort vs BestEffortFIFO</b><br/>
+      <img src="figures/final5_cohort_best_effort_vs_learned.png" alt="Cohort benchmark vs BestEffortFIFO" width="100%"/>
+    </td>
+    <td align="center" width="50%">
+      <b>Cohort vs StrictFIFO</b><br/>
+      <img src="figures/final5_cohort_strict_vs_learned.png" alt="Cohort benchmark vs StrictFIFO" width="100%"/>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <b>Elastic vs BestEffortFIFO</b><br/>
+      <img src="figures/final5_elastic_best_effort_vs_learned.png" alt="Elastic benchmark vs BestEffortFIFO" width="100%"/>
+    </td>
+    <td align="center" width="50%">
+      <b>Elastic vs StrictFIFO</b><br/>
+      <img src="figures/final5_elastic_strict_vs_learned.png" alt="Elastic benchmark vs StrictFIFO" width="100%"/>
+    </td>
+  </tr>
+</table>
 
-![Elastic benchmark](figures/final5_elastic_strict_vs_learned.png)
+Supporting tradeoff plot:
 
-Additional committed comparison figures:
-
-- [`figures/final5_cohort_best_effort_vs_learned.png`](figures/final5_cohort_best_effort_vs_learned.png)
-- [`figures/final5_cohort_strict_vs_learned.png`](figures/final5_cohort_strict_vs_learned.png)
-- [`figures/final5_elastic_best_effort_vs_learned.png`](figures/final5_elastic_best_effort_vs_learned.png)
-- [`figures/final5_elastic_strict_vs_learned.png`](figures/final5_elastic_strict_vs_learned.png)
-- [`figures/final5_small_wait_tradeoff.png`](figures/final5_small_wait_tradeoff.png)
+- [`figures/final5_small_wait_tradeoff.png`](figures/final5_small_wait_tradeoff.png) for the small-job wait tradeoff view.
 
 ## Repository Layout
 
