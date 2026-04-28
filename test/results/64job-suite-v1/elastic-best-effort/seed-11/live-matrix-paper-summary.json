@@ -1,0 +1,7 @@
+{
+  "workload_preset": "kueue-lingjun-gang-elastic-topology",
+  "seed": 11,
+  "num_jobs": 64,
+  "comparisons": {},
+  "paper_summary": {}
+}

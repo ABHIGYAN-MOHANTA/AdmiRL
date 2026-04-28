@@ -1304,6 +1304,86 @@
       ],
       "title": "Benchmark Outcome Snapshot",
       "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-BlPu"
+          },
+          "min": 0
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 26
+      },
+      "id": 22,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "targets": [
+        {
+          "expr": "max(admirl_benchmark_cluster_nodes_total) or vector(0)",
+          "instant": true,
+          "legendFormat": "cluster nodes",
+          "refId": "A"
+        },
+        {
+          "expr": "max(admirl_benchmark_namespace_pods_total) or vector(0)",
+          "instant": true,
+          "legendFormat": "namespace pods",
+          "refId": "B"
+        },
+        {
+          "expr": "max(admirl_benchmark_namespace_workloads_total) or vector(0)",
+          "instant": true,
+          "legendFormat": "namespace workloads",
+          "refId": "C"
+        },
+        {
+          "expr": "max(admirl_benchmark_clusterqueues_total) or vector(0)",
+          "instant": true,
+          "legendFormat": "clusterqueues",
+          "refId": "D"
+        },
+        {
+          "expr": "max(admirl_benchmark_localqueues_total) or vector(0)",
+          "instant": true,
+          "legendFormat": "localqueues",
+          "refId": "E"
+        },
+        {
+          "expr": "max(admirl_benchmark_resourceflavors_total) or vector(0)",
+          "instant": true,
+          "legendFormat": "resourceflavors",
+          "refId": "F"
+        },
+        {
+          "expr": "max(admirl_benchmark_topologies_total) or vector(0)",
+          "instant": true,
+          "legendFormat": "topologies",
+          "refId": "G"
+        }
+      ],
+      "title": "Live Kubernetes Object Snapshot",
+      "type": "bargauge"
     }
   ],
   "refresh": "5s",
@@ -1326,6 +1406,6 @@
   "timezone": "",
   "title": "AdmiRL Runtime & Benchmark Operations",
   "uid": "admirl-runtime",
-  "version": 3,
+  "version": 4,
   "weekStart": ""
 }

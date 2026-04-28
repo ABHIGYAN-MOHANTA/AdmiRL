@@ -173,6 +173,13 @@ class ModelServerState:
             "topology_hit_rate": float(snapshot.get("topology_hit_rate", 0.0) or 0.0),
             "small_job_bypass_count": float(snapshot.get("small_job_bypass_count", 0.0) or 0.0),
             "head_gang_workload": str(snapshot.get("head_gang_workload") or ""),
+            "cluster_nodes_total": int(snapshot.get("cluster_nodes_total", 0) or 0),
+            "namespace_pods_total": int(snapshot.get("namespace_pods_total", 0) or 0),
+            "namespace_workloads_total": int(snapshot.get("namespace_workloads_total", 0) or 0),
+            "clusterqueues_total": int(snapshot.get("clusterqueues_total", 0) or 0),
+            "localqueues_total": int(snapshot.get("localqueues_total", 0) or 0),
+            "resourceflavors_total": int(snapshot.get("resourceflavors_total", 0) or 0),
+            "topologies_total": int(snapshot.get("topologies_total", 0) or 0),
         }
         self.benchmark_status = sample
         self.benchmark_history.append(sample)
@@ -322,6 +329,13 @@ class ModelServerState:
             ),
             "admirl_benchmark_topology_hit_rate": float(benchmark.get("topology_hit_rate", 0.0) or 0.0),
             "admirl_benchmark_small_job_bypass_count": float(benchmark.get("small_job_bypass_count", 0.0) or 0.0),
+            "admirl_benchmark_cluster_nodes_total": float(benchmark.get("cluster_nodes_total", 0) or 0.0),
+            "admirl_benchmark_namespace_pods_total": float(benchmark.get("namespace_pods_total", 0) or 0.0),
+            "admirl_benchmark_namespace_workloads_total": float(benchmark.get("namespace_workloads_total", 0) or 0.0),
+            "admirl_benchmark_clusterqueues_total": float(benchmark.get("clusterqueues_total", 0) or 0.0),
+            "admirl_benchmark_localqueues_total": float(benchmark.get("localqueues_total", 0) or 0.0),
+            "admirl_benchmark_resourceflavors_total": float(benchmark.get("resourceflavors_total", 0) or 0.0),
+            "admirl_benchmark_topologies_total": float(benchmark.get("topologies_total", 0) or 0.0),
         }
         for metric_name, value in benchmark_fields.items():
             lines.append(f"# TYPE {metric_name} gauge")

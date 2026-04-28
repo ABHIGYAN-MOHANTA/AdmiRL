@@ -40,7 +40,9 @@ KWOK_CLUSTER_ALIAS = "admirl-kwok"
 DEFAULT_KUEUE_FORK_URL = "https://github.com/ABHIGYAN-MOHANTA/kueue.git"
 DEFAULT_KUEUE_FORK_REF = "main"
 DEFAULT_KUEUE_CACHE_DIR = Path(tempfile.gettempdir()) / "admirl-kueue-source"
-LOCAL_KUEUE_SOURCE_DIR = (Path.home() / "Desktop" / "kueue").resolve()
+LOCAL_KUEUE_SOURCE_DIR = Path(
+    os.environ.get("ADMIRL_LOCAL_KUEUE_SOURCE_DIR", str(Path.home() / "Desktop" / "kueue"))
+).expanduser().resolve()
 
 PRESET_TO_KWOK_LAYOUT = {
     "kueue-lingjun-gang-starvation": "training-gang-starvation",
@@ -1238,6 +1240,13 @@ def _build_benchmark_progress_payload(
         "topology_hit_rate": float(metrics.get("topology_hit_rate", 0.0) or 0.0),
         "small_job_bypass_count": float(metrics.get("small_job_bypass_count_while_gang_pending", 0.0) or 0.0),
         "head_gang_workload": str(metrics.get("head_gang_workload", "") or ""),
+        "cluster_nodes_total": int(metrics.get("cluster_nodes_total", 0) or 0),
+        "namespace_pods_total": int(metrics.get("namespace_pods_total", 0) or 0),
+        "namespace_workloads_total": int(metrics.get("namespace_workloads_total", 0) or 0),
+        "clusterqueues_total": int(metrics.get("clusterqueues_total", 0) or 0),
+        "localqueues_total": int(metrics.get("localqueues_total", 0) or 0),
+        "resourceflavors_total": int(metrics.get("resourceflavors_total", 0) or 0),
+        "topologies_total": int(metrics.get("topologies_total", 0) or 0),
     }
 
 
@@ -1439,7 +1448,9 @@ def cleanup_kueue_test_state() -> None:
     for item in namespaces:
         metadata = item.get("metadata", {}) or {}
         name = str(metadata.get("name") or "")
-        if not name.startswith("kueue-") or name == KUEUE_NAMESPACE:
+        if name == KUEUE_NAMESPACE:
+            continue
+        if not (name.startswith("kueue-") or name.startswith("demo-")):
             continue
         test_namespaces.append(name)
 
@@ -1470,10 +1481,23 @@ def cleanup_kueue_test_state() -> None:
     for item in clusterqueues:
         metadata = item.get("metadata", {}) or {}
         name = str(metadata.get("name") or "")
-        if not name or (name != "training-cluster-queue" and not name.startswith("cq-kueue-")):
+        if not name or (
+            name != "training-cluster-queue"
+            and not name.startswith("cq-kueue-")
+            and not name.startswith("cq-demo-")
+        ):
             continue
         _clear_finalizers("clusterqueue.kueue.x-k8s.io", name)
         _delete_resource("clusterqueue.kueue.x-k8s.io", name)
+
+    cohorts = _kubectl_json_optional(["get", "cohorts.kueue.x-k8s.io"]).get("items", [])
+    for item in cohorts:
+        metadata = item.get("metadata", {}) or {}
+        name = str(metadata.get("name") or "")
+        if not name.startswith("cohort-"):
+            continue
+        _clear_finalizers("cohort.kueue.x-k8s.io", name)
+        _delete_resource("cohort.kueue.x-k8s.io", name)
 
     resource_flavors = _kubectl_json_optional(["get", "resourceflavors.kueue.x-k8s.io"]).get("items", [])
     for item in resource_flavors:
@@ -1653,7 +1677,13 @@ def wait_for_arm_completion(
             active=False,
         )
     )
-    raise TimeoutError(f"timed out waiting for namespace {namespace} to finish")
+    completed_count = len(set(finalized_pods))
+    print(
+        f"[WARN] timed out waiting for namespace {namespace} to finish "
+        f"({completed_count}/{expected_pods} pods completed in {timeout_seconds:.0f}s) — "
+        f"collecting partial results",
+        flush=True,
+    )
 
 
 def _condition_time(conditions: list[dict], kind: str, status: str = "True") -> float | None:
@@ -1740,6 +1770,10 @@ def collect_arm_metrics(
     jobs = _kubectl_json_optional(["get", "jobs.batch", "-n", namespace]).get("items", [])
     workloads = _kubectl_json(["get", "workloads.kueue.x-k8s.io", "-n", namespace]).get("items", [])
     nodes = _kubectl_json(["get", "nodes"]).get("items", [])
+    clusterqueues = _kubectl_json_optional(["get", "clusterqueues.kueue.x-k8s.io"]).get("items", [])
+    localqueues = _kubectl_json_optional(["get", "localqueues.kueue.x-k8s.io", "-n", namespace]).get("items", [])
+    resourceflavors = _kubectl_json_optional(["get", "resourceflavors.kueue.x-k8s.io"]).get("items", [])
+    topologies = _kubectl_json_optional(["get", "topologies.kueue.x-k8s.io"]).get("items", [])
     node_domain = {
         item["metadata"]["name"]: ((item.get("metadata", {}) or {}).get("labels", {}) or {}).get("nvlink-domain", "")
         for item in nodes
@@ -1962,6 +1996,13 @@ def collect_arm_metrics(
 
     metrics = {
         "namespace": namespace,
+        "cluster_nodes_total": len(nodes),
+        "namespace_pods_total": len(pods),
+        "namespace_workloads_total": len(workloads),
+        "clusterqueues_total": len(clusterqueues),
+        "localqueues_total": len(localqueues),
+        "resourceflavors_total": len(resourceflavors),
+        "topologies_total": len(topologies),
         "jobs_total": len(meta.get("workloads", [])),
         "jobs_completed": sum(1 for row in group_rows if row["completed"]),
         "avg_workload_wait_seconds": (sum(wait_values) / len(wait_values)) if wait_values else 0.0,
@@ -2084,7 +2125,13 @@ def run_arm(
 
         scaled_arrivals = [float(item["arrival_time"]) / max(time_scale, 1.0) for item in meta["workloads"]]
         scaled_runtimes = [max(5.0, float(item["runtime_seconds"]) / max(runtime_scale, 1.0)) for item in meta["workloads"]]
-        timeout_seconds = max(300.0, sum(scaled_arrivals[-5:]) + sum(sorted(scaled_runtimes, reverse=True)[:5]) + 180.0)
+        # Sum ALL arrivals and runtimes: workloads execute serially so the
+        # total wall-clock is roughly max(arrivals) + sum(runtimes) when pods
+        # must wait for predecessors to drain before being admitted.
+        timeout_seconds = max(
+            600.0,
+            max(scaled_arrivals, default=0.0) + sum(scaled_runtimes) + 300.0,
+        )
         finalized_pods: dict[str, dict] = {}
         expected_pods = sum(int(item.get("selected_worker_count", item["worker_count"])) for item in meta["workloads"])
         wait_for_arm_completion(

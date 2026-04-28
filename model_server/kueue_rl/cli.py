@@ -199,3 +199,13 @@ def train(args):
         print(f"Saved summary to {output_path}")
 
     return result
+
+
+def main():
+    parser = build_parser()
+    args = parser.parse_args()
+    train(args)
+
+
+if __name__ == "__main__":
+    main()

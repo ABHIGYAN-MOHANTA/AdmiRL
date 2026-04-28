@@ -21,7 +21,12 @@ from test.kueue.run_live_kueue_matrix import (
 from model_server.admirl_server.kueue_runtime import load_runtime_policy
 
 
-DEFAULT_LOCAL_KUEUE_DIR = Path.home() / "Desktop" / "kueue"
+DEFAULT_LOCAL_KUEUE_DIR = Path(
+    os.environ.get("ADMIRL_LOCAL_KUEUE_SOURCE_DIR", str(Path.home() / "Desktop" / "kueue"))
+).expanduser().resolve()
+DEFAULT_UPSTREAM_LOCAL_DIR = Path(
+    os.environ.get("ADMIRL_UPSTREAM_KUEUE_SOURCE_DIR", str(Path.home() / "Desktop" / "Upstream" / "kueue"))
+).expanduser().resolve()
 DEFAULT_UPSTREAM_KUEUE_URL = "https://github.com/kubernetes-sigs/kueue.git"
 DEFAULT_UPSTREAM_KUEUE_REF = "v0.15.0"
 SEED_SET = [7, 11, 13, 17, 23]
@@ -82,6 +87,7 @@ def _default_checkpoint_for_preset(repo_root: Path, workload_preset: str) -> str
     if "elastic" in preset:
         candidates.extend(
             [
+                repo_root / "test" / "results" / "checkpoints-rerun-20260419" / "admirl-elastic.pt",
                 repo_root / "test" / "results" / "checkpoints" / "admirl-elastic.pt",
                 repo_root / "test" / "results" / "kueue-checkpoints-sweep" / "eet-tuned-seed7.pt",
             ]
@@ -89,6 +95,7 @@ def _default_checkpoint_for_preset(repo_root: Path, workload_preset: str) -> str
     if "starvation" in preset or "cohort" in preset:
         candidates.extend(
             [
+                repo_root / "test" / "results" / "checkpoints-rerun-20260419" / "admirl-cohort.pt",
                 repo_root / "test" / "results" / "checkpoints" / "admirl-cohort.pt",
                 repo_root / "test" / "results" / "kueue-checkpoints-sweep" / "cohort-tuned-seed7.pt",
             ]
@@ -100,24 +107,27 @@ def _default_checkpoint_for_preset(repo_root: Path, workload_preset: str) -> str
 
 
 def _arm_specs(repo_root: Path) -> list[ArmSpec]:
+    upstream_local_available = DEFAULT_UPSTREAM_LOCAL_DIR.exists()
     return [
         ArmSpec(
             name="cohort-best-effort",
             label="cohort + BestEffortFIFO",
             workload_preset="kueue-lingjun-gang-starvation-cohort",
             arm="stock-best-effort-default",
-            source_mode="git",
-            git_url=DEFAULT_UPSTREAM_KUEUE_URL,
-            git_ref=DEFAULT_UPSTREAM_KUEUE_REF,
+            source_mode="local" if upstream_local_available else "git",
+            source_dir=str(DEFAULT_UPSTREAM_LOCAL_DIR) if upstream_local_available else None,
+            git_url=None if upstream_local_available else DEFAULT_UPSTREAM_KUEUE_URL,
+            git_ref=None if upstream_local_available else DEFAULT_UPSTREAM_KUEUE_REF,
         ),
         ArmSpec(
             name="cohort-strict",
             label="cohort + StrictFIFO",
             workload_preset="kueue-lingjun-gang-starvation-cohort",
             arm="strict-default-sensitivity",
-            source_mode="git",
-            git_url=DEFAULT_UPSTREAM_KUEUE_URL,
-            git_ref=DEFAULT_UPSTREAM_KUEUE_REF,
+            source_mode="local" if upstream_local_available else "git",
+            source_dir=str(DEFAULT_UPSTREAM_LOCAL_DIR) if upstream_local_available else None,
+            git_url=None if upstream_local_available else DEFAULT_UPSTREAM_KUEUE_URL,
+            git_ref=None if upstream_local_available else DEFAULT_UPSTREAM_KUEUE_REF,
         ),
         ArmSpec(
             name="cohort-learned",
@@ -133,18 +143,20 @@ def _arm_specs(repo_root: Path) -> list[ArmSpec]:
             label="elastic + BestEffortFIFO",
             workload_preset="kueue-lingjun-gang-elastic-topology",
             arm="stock-best-effort-default",
-            source_mode="git",
-            git_url=DEFAULT_UPSTREAM_KUEUE_URL,
-            git_ref=DEFAULT_UPSTREAM_KUEUE_REF,
+            source_mode="local" if upstream_local_available else "git",
+            source_dir=str(DEFAULT_UPSTREAM_LOCAL_DIR) if upstream_local_available else None,
+            git_url=None if upstream_local_available else DEFAULT_UPSTREAM_KUEUE_URL,
+            git_ref=None if upstream_local_available else DEFAULT_UPSTREAM_KUEUE_REF,
         ),
         ArmSpec(
             name="elastic-strict",
             label="elastic + StrictFIFO",
             workload_preset="kueue-lingjun-gang-elastic-topology",
             arm="strict-default-sensitivity",
-            source_mode="git",
-            git_url=DEFAULT_UPSTREAM_KUEUE_URL,
-            git_ref=DEFAULT_UPSTREAM_KUEUE_REF,
+            source_mode="local" if upstream_local_available else "git",
+            source_dir=str(DEFAULT_UPSTREAM_LOCAL_DIR) if upstream_local_available else None,
+            git_url=None if upstream_local_available else DEFAULT_UPSTREAM_KUEUE_URL,
+            git_ref=None if upstream_local_available else DEFAULT_UPSTREAM_KUEUE_REF,
         ),
         ArmSpec(
             name="elastic-learned",

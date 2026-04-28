@@ -1,0 +1,86 @@
+{
+  "apiVersion": "v1",
+  "kind": "Pod",
+  "metadata": {
+    "name": "10-eet-noise-b-37-0",
+    "namespace": "kueue-stock-best-effort-default-1777269073",
+    "labels": {
+      "kueue.x-k8s.io/queue-name": "lq-eet-small",
+      "kueue.x-k8s.io/pod-group-name": "10-eet-noise-b-37",
+      "admirl.ai/workload-class": "small",
+      "kueue.x-k8s.io/pod-group-pod-index": "0"
+    },
+    "annotations": {
+      "kueue.x-k8s.io/pod-group-total-count": "1",
+      "admirl.ai/workload-name": "10-eet-noise-b-37",
+      "admirl.ai/fairshare-group": "eet-small-b",
+      "admirl.ai/topology-domain": "",
+      "admirl.ai/provisioning-pending": "false",
+      "admirl.ai/runtime-seconds": "660.000",
+      "admirl.ai/scaled-runtime-seconds": "6",
+      "admirl.ai/scaled-runtime-rf-4gpu-b": "6"
+    }
+  },
+  "spec": {
+    "restartPolicy": "Never",
+    "schedulerName": "default-scheduler",
+    "affinity": {
+      "nodeAffinity": {
+        "requiredDuringSchedulingIgnoredDuringExecution": {
+          "nodeSelectorTerms": [
+            {
+              "matchExpressions": [
+                {
+                  "key": "admirl.ai/flavor",
+                  "operator": "In",
+                  "values": [
+                    "rf-4gpu-b"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "containers": [
+      {
+        "name": "worker",
+        "image": "busybox",
+        "command": [
+          "sh",
+          "-c",
+          "runtime=\"$BASE_RUNTIME_SECONDS\"; case \"$NODE_NAME\" in *rf-4gpu-b*) runtime=\"$RUNTIME_RF_4GPU_B\" ;; esac; sleep \"$runtime\""
+        ],
+        "env": [
+          {
+            "name": "NODE_NAME",
+            "valueFrom": {
+              "fieldRef": {
+                "fieldPath": "spec.nodeName"
+              }
+            }
+          },
+          {
+            "name": "BASE_RUNTIME_SECONDS",
+            "value": "6"
+          },
+          {
+            "name": "RUNTIME_RF_4GPU_B",
+            "value": "6"
+          }
+        ],
+        "resources": {
+          "requests": {
+            "cpu": "20",
+            "memory": "80Gi",
+            "admirl.ai/gpu": "4"
+          },
+          "limits": {
+            "admirl.ai/gpu": "4"
+          }
+        }
+      }
+    ]
+  }
+}

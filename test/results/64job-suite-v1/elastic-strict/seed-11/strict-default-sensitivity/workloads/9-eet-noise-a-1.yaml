@@ -1,0 +1,86 @@
+{
+  "apiVersion": "v1",
+  "kind": "Pod",
+  "metadata": {
+    "name": "9-eet-noise-a-1-0",
+    "namespace": "kueue-strict-default-sensitivity-1777266259",
+    "labels": {
+      "kueue.x-k8s.io/queue-name": "lq-eet-small",
+      "kueue.x-k8s.io/pod-group-name": "9-eet-noise-a-1",
+      "admirl.ai/workload-class": "small",
+      "kueue.x-k8s.io/pod-group-pod-index": "0"
+    },
+    "annotations": {
+      "kueue.x-k8s.io/pod-group-total-count": "1",
+      "admirl.ai/workload-name": "9-eet-noise-a-1",
+      "admirl.ai/fairshare-group": "eet-small-a1",
+      "admirl.ai/topology-domain": "",
+      "admirl.ai/provisioning-pending": "false",
+      "admirl.ai/runtime-seconds": "540.000",
+      "admirl.ai/scaled-runtime-seconds": "5",
+      "admirl.ai/scaled-runtime-rf-4gpu-a": "5"
+    }
+  },
+  "spec": {
+    "restartPolicy": "Never",
+    "schedulerName": "default-scheduler",
+    "affinity": {
+      "nodeAffinity": {
+        "requiredDuringSchedulingIgnoredDuringExecution": {
+          "nodeSelectorTerms": [
+            {
+              "matchExpressions": [
+                {
+                  "key": "admirl.ai/flavor",
+                  "operator": "In",
+                  "values": [
+                    "rf-4gpu-a"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "containers": [
+      {
+        "name": "worker",
+        "image": "busybox",
+        "command": [
+          "sh",
+          "-c",
+          "runtime=\"$BASE_RUNTIME_SECONDS\"; case \"$NODE_NAME\" in *rf-4gpu-a*) runtime=\"$RUNTIME_RF_4GPU_A\" ;; esac; sleep \"$runtime\""
+        ],
+        "env": [
+          {
+            "name": "NODE_NAME",
+            "valueFrom": {
+              "fieldRef": {
+                "fieldPath": "spec.nodeName"
+              }
+            }
+          },
+          {
+            "name": "BASE_RUNTIME_SECONDS",
+            "value": "5"
+          },
+          {
+            "name": "RUNTIME_RF_4GPU_A",
+            "value": "5"
+          }
+        ],
+        "resources": {
+          "requests": {
+            "cpu": "20",
+            "memory": "80Gi",
+            "admirl.ai/gpu": "4"
+          },
+          "limits": {
+            "admirl.ai/gpu": "4"
+          }
+        }
+      }
+    ]
+  }
+}
